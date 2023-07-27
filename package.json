@@ -1,0 +1,38 @@
+{
+  "name": "nebra",
+  "version": "0.0.1",
+  "description": "Simple noSQL on top of SQLite",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "dev": "tsup-node --watch --onSuccess=\"node dist/index.js\"",
+    "build": "tsup-node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aerotoad/nebra.git"
+  },
+  "keywords": [
+    "sqlite",
+    "nosql",
+    "mongo",
+    "sqlite3",
+    "better-sqlite-3",
+    "db",
+    "database",
+    "storing",
+    "easy",
+    "simple",
+    "wrapper"
+  ],
+  "author": "aerotoad",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/aerotoad/nebra/issues"
+  },
+  "homepage": "https://github.com/aerotoad/nebra#readme"
+}
