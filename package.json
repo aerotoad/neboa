@@ -25,7 +25,7 @@
     "dev": "tsup-node --watch --onSuccess=\"node dist/index.js\"",
     "build": "tsup-node",
     "test": "vitest run",
-    "test:ui": "vitest run --ui --watch",
+    "test:ui": "vitest watch --ui",
     "test:coverage": "vitest run --coverage",
     "release": "npm run build && commit-and-tag-version && npm publish"
   },
@@ -43,6 +43,8 @@
     "wrapper"
   ],
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "@vitest/ui": "^0.33.0",
     "commit-and-tag-version": "^11.2.2",
     "vite": "^4.4.7",
     "vitest": "^0.33.0"
