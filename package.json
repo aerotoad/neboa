@@ -1,6 +1,6 @@
 {
   "name": "nebra",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Simple noSQL on top of SQLite",
   "author": "Samuel Bazaga",
   "license": "AGPL-3.0-or-later",
@@ -27,7 +27,8 @@
     "test": "vitest run",
     "test:ui": "vitest watch --ui",
     "test:coverage": "vitest run --coverage",
-    "release": "npm run build && commit-and-tag-version && npm publish"
+    "release:test": "commit-and-tag-version",
+    "release:full": "npm run build && commit-and-tag-version && npm publish"
   },
   "keywords": [
     "sqlite",
