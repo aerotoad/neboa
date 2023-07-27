@@ -41,5 +41,11 @@
   "devDependencies": {
     "vite": "^4.4.7",
     "vitest": "^0.33.0"
+  },
+  "dependencies": {
+    "better-sqlite3": "^8.5.0",
+    "bson-objectid": "^2.0.4",
+    "knex": "^2.5.1",
+    "regex-parser": "^2.2.11"
   }
 }

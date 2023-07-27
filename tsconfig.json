@@ -3,6 +3,7 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "Node16",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "strict": true
   }
 }
