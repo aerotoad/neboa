@@ -18,10 +18,10 @@
   <br>
 
   <p align="center" dir="auto">
-    <b>:sparkles: Type-safe NoSQL Operations</b> |
-    <b>:wrench: Powered by Knex for Flexibility</b> |
-    <b>:package: Built on SQLite for Efficiency</b> |
-    <b>:rainbow: Effortless Data Management</b>
+    <b>:sparkles: Type-Safe</b> |
+    <b>:wrench: Knex-Powered</b> |
+    <b>:minidisc: SQLite-Based</b> |
+    <b>:rainbow: Effortless</b>
   </p>
 
   <hr />
