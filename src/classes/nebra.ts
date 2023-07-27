@@ -6,6 +6,12 @@ export class Nebra {
 
   private _knex: ReturnType<typeof knex>;
 
+  /**
+   * Create a new Nebra instance
+   * @param path Path to the database file (e.g. `:memory:` or `./database.db`)
+   * If :memory: is used, the database will be stored in memory and will not be persistent
+   * This path is passed directly to the Knex instance and it uses the better-sqlite3 driver
+   */
   constructor(path: string) {
     this._knex = knex({
       client: 'better-sqlite3',
@@ -27,6 +33,13 @@ export class Nebra {
     });
   }
 
+  /**
+   * Authenticate to the database
+   * Used to check if the database is accessible and working
+   * @returns {Promise<boolean>} True if authenticated
+   * @throws {Error} If authentication fails
+   * @example
+  */
   async authenticate() {
     try {
       await this._knex.raw('SELECT 1 + 1 AS result');
@@ -36,7 +49,11 @@ export class Nebra {
     }
   }
 
-  async collection<T = any>(name: string): Promise<Collection<T>> {
+  /**
+   * Access a collection or create it if it doesn't exist
+   * @param name Collection name
+   * @returns Collection instance
+   */
   async collection<T = Record<any, any>>(name: string): Promise<Collection<T>> {
     try {
       const exists = await this._knex.schema.hasTable(name);
@@ -54,6 +71,12 @@ export class Nebra {
     }
   }
 
+  /**
+   * Access the Knex instance directly
+   * (Caution: You can break things with this, use at your own risk)
+   * Can be used for migrations, etc.
+   * @returns {ReturnType<typeof knex>} Knex instance
+   */
   knex(): ReturnType<typeof knex> {
     return this._knex;
   }
