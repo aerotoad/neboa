@@ -54,4 +54,8 @@ export class Nebra {
     }
   }
 
+  knex(): ReturnType<typeof knex> {
+    return this._knex;
+  }
+
 }
