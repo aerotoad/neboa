@@ -37,6 +37,7 @@ export class Nebra {
   }
 
   async collection<T = any>(name: string): Promise<Collection<T>> {
+  async collection<T = Record<any, any>>(name: string): Promise<Collection<T>> {
     try {
       const exists = await this._knex.schema.hasTable(name);
       if (exists) {
