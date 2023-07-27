@@ -10,7 +10,10 @@
   },
   "scripts": {
     "dev": "tsup-node --watch --onSuccess=\"node dist/index.js\"",
-    "build": "tsup-node"
+    "build": "tsup-node",
+    "test": "vitest run",
+    "test:ui": "vitest run --ui --watch",
+    "test:coverage": "vitest run --coverage"
   },
   "repository": {
     "type": "git",
@@ -34,5 +37,9 @@
   "bugs": {
     "url": "https://github.com/aerotoad/nebra/issues"
   },
-  "homepage": "https://github.com/aerotoad/nebra#readme"
+  "homepage": "https://github.com/aerotoad/nebra#readme",
+  "devDependencies": {
+    "vite": "^4.4.7",
+    "vitest": "^0.33.0"
+  }
 }
