@@ -175,11 +175,19 @@ export class Query<T = any> {
 
         // Apply lookups
         for (let lookup of this.lookups) {
-          const { from, localField, foreignField, as } = lookup;
+          const { from, localField, foreignField, as, limit, skip, sort } = lookup;
           const lookupCollection = new Collection(this._knex, from);
           const lookupQuery = lookupCollection.query();
           if (Array.isArray(parsedDocument[localField])) {
             lookupQuery.containedIn(foreignField, parsedDocument[localField]);
+            if (limit) lookupQuery.limit(limit);
+            if (skip) lookupQuery.skip(skip);
+            if (sort) {
+              Object.keys(sort).forEach((field) => {
+                if (sort[field] === 'asc') lookupQuery.ascending(field);
+                if (sort[field] === 'desc') lookupQuery.descending(field);
+              });
+            }
           } else {
             lookupQuery.equalTo(foreignField, parsedDocument[localField]);
           }
