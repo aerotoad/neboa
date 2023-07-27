@@ -2,22 +2,32 @@
   "name": "nebra",
   "version": "0.0.1",
   "description": "Simple noSQL on top of SQLite",
+  "author": "Samuel Bazaga",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/aerotoad/nebra/issues"
+  },
+  "homepage": "https://github.com/aerotoad/nebra#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aerotoad/nebra.git"
+  },
   "exports": {
     ".": {
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "tsup-node --watch --onSuccess=\"node dist/index.js\"",
     "build": "tsup-node",
     "test": "vitest run",
     "test:ui": "vitest run --ui --watch",
-    "test:coverage": "vitest run --coverage"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/aerotoad/nebra.git"
+    "test:coverage": "vitest run --coverage",
+    "release": "npm run build && commit-and-tag-version && npm publish"
   },
   "keywords": [
     "sqlite",
@@ -32,13 +42,8 @@
     "simple",
     "wrapper"
   ],
-  "author": "aerotoad",
-  "license": "AGPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/aerotoad/nebra/issues"
-  },
-  "homepage": "https://github.com/aerotoad/nebra#readme",
   "devDependencies": {
+    "commit-and-tag-version": "^11.2.2",
     "vite": "^4.4.7",
     "vitest": "^0.33.0"
   },
