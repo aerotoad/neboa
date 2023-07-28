@@ -157,13 +157,10 @@ export class Collection<T = {}> {
 
   private newDocument(document: T): Document<T> {
 
-    assert(typeof document === 'object', 'Document must be an object');
-    assert(!Array.isArray(document), 'Document cannot be an array');
-    assert(document !== null, 'Document cannot be null');
-    assert(document !== undefined, 'Document cannot be undefined');
-    assert(Object.hasOwnProperty.call(document, '_id') === false, 'Document cannot have _id property');
-    assert(Object.hasOwnProperty.call(document, 'createdAt') === false, 'Document cannot have createdAt property');
-    assert(Object.hasOwnProperty.call(document, 'updatedAt') === false, 'Document cannot have updatedAt property');
+    if (typeof document !== 'object') throw new Error('Document must be an object');
+    if (Array.isArray(document)) throw new Error('Document cannot be an array');
+    if (document === null) throw new Error('Document cannot be null');
+    if (document === undefined) throw new Error('Document cannot be undefined');
 
     return {
       ...document,
