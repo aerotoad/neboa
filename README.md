@@ -323,6 +323,18 @@ console.log(result); // Array of documents
 ```
 A query will always return an array of documents, even if only one document matches the query. If no documents match the query, an empty array will be returned.
 
+#### Array fields and queries
+
+Working with array fields can be tricky and it adds some limitations to the queries you can perform on them.
+This means that all the query methods expect the field to not be an array, so if you want to query an array field you need to use the dedicated query methods for comparing arrays: `.containedIn()` and `.notContainedIn()`.
+
+```typescript
+const Users = await db.collection('users');
+const query = Users.query()
+  .containedIn('hobbies', ['surfing', 'skateboarding'])
+  .notContainedIn('hobbies', ['reading', 'writing'])
+```
+
 To count the number of documents that match a query you can use the `.count()` method:
 
 ```typescript
@@ -333,6 +345,87 @@ const query = Users.query()
 const count = await query.count();
 console.log(count); // 1
 ```
+
+#### Query lookups
+
+Query lookups are the way to query relational data in Nebra. They allow you to query a different collection and merge the results into the current query.
+
+To perform a query lookup you can use the `.lookup()` method, which takes the name of the collection you want to query as the first argument and a lookup options object as the second argument.
+
+The lookup options object has the following properties:
+
+``` typescript
+interface LookupOptions {
+  from: string;         // Name of the collection to query
+  localField: string;   // Name of the field in the current collection
+  foreignField: string; // Name of the field in the collection to query
+  as: string;           // Name of the field to store the results in (in the current collection documents)
+  limit?: number;       // Maximum number of results to return
+  skip?: number;        // Number of results to skip
+  sort?: SortOptions;   // Sort options
+}
+
+interface SortOptions {
+  [key: string]: 'asc' | 'desc';  // Field name and sort direction
+}
+```
+
+```typescript
+const Users = await db.collection('users');
+const query = Users.query()
+  .equalTo('username', 'TonyStark')
+  .lookup('posts', {
+    from: 'posts',
+    localField: '_id',
+    foreignField: 'author',
+    as: 'posts',
+    limit: 10,
+    skip: 0,
+    sort: {
+      createdAt: 'desc',
+    },
+  });
+
+const result = await query.exec();
+```
+The previous lookup query will return an array of documents with the `posts` field populated with the 10 most recent posts by Tony Stark: 
+
+```typescript
+// Result:
+const result = [{
+  _id: '...',
+  username: 'TonyStark',
+  email: 'tony@starkindustries.com',
+  posts: [{
+    _id: '...',
+    title: '...',
+    content: '...',
+  }]
+}]
+```
+
+#### Compound queries
+
+Compound queries allow you to combine multiple queries together to create more complex queries.
+
+To create a compound query you can use the `.and()` and `.or()` methods, which take a query builder instance as the argument.
+
+```typescript
+const Users = await db.collection('users');
+const baseQuery = Users.query();
+
+const nameQuery = Users.query();
+nameQuery.equalTo('username', 'HermioneGranger');
+
+const emailQuery = Users.query();
+emailQuery.equalTo('email', 'dory@findingsomedory.com');
+
+baseQuery.and(nameQuery);
+baseQuery.or(emailQuery);
+
+const result = await baseQuery.exec();
+```
+The previous compound query will return an array of documents that match either the `nameQuery` or the `emailQuery`.
 
 You can find a list of all the available query methods [below](#reference-of-all-query-methods).
 
