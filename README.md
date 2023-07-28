@@ -140,6 +140,7 @@ The connection will be kept open by default and will be used by all queries.
 If you need to close it you can call the `.close()` method, which will return a promise.
 
 > **Note:** Once a connection is closed it cannot be reopened, you will need to create a new instance of nebra to access the database again.
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ### Collections
 
@@ -182,6 +183,7 @@ type Document<User> = {
   updatedAt: string; // ISO date string managed by Nebra
 };
 ```
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ### Inserting documents
 
@@ -216,6 +218,7 @@ const newUsers = await user.insertMany([
   },
 ]);
 ```
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ### Updating documents
 
@@ -267,6 +270,7 @@ const updatedUsers = await Users.updateMany(
   ]
 );
 ```
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ### Deleting documents
 
@@ -308,6 +312,7 @@ const deleted = await Users.deleteMany([
 
 console.log(deleted); // true
 ```
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ### Renaming collections
 
@@ -317,6 +322,7 @@ To rename a collection you can use the `.rename()` method, which takes the new n
 const Users = await db.collection('users');
 await Users.rename('people');
 ```
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ### Dropping collections
 
@@ -326,6 +332,7 @@ To drop a collection you can use the `.drop()` method:
 const Users = await db.collection('users');
 await Users.drop();
 ```
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ### Queries
 
@@ -462,6 +469,7 @@ const result = await baseQuery.exec();
 The previous compound query will return an array of documents that match either the `nameQuery` or the `emailQuery`.
 
 You can find a list of all the available query methods [below](#reference-of-all-query-methods).
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ### Reference of all query methods
 
@@ -504,8 +512,7 @@ You can find a list of all the available query methods [below](#reference-of-all
 #### Executing queries
 - `exec()`: Executes the query and returns a promise that resolves to an array of documents.
 - `count()`: Executes the query and returns a promise that resolves to the number of documents returned by the query.
-
-In progress...
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ## Contributing
 
