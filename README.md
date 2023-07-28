@@ -76,6 +76,39 @@ This example demonstrates how to create a new Nebra instance, create a new colle
 
 ## Documentation
 
+### Table of Contents
+- [Description](#description)
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Example usage](#example-usage)
+- [Documentation](#documentation)
+  - [Table of Contents](#table-of-contents)
+  - [Connecting to a database](#connecting-to-a-database)
+    - [Testing the connection](#testing-the-connection)
+    - [Closing the connection](#closing-the-connection)
+  - [Collections](#collections)
+  - [Inserting documents](#inserting-documents)
+  - [Updating documents](#updating-documents)
+  - [Deleting documents](#deleting-documents)
+  - [Renaming collections](#renaming-collections)
+  - [Dropping collections](#dropping-collections)
+  - [Queries](#queries)
+    - [Basic queries](#basic-queries)
+    - [Array fields and queries](#array-fields-and-queries)
+    - [Query lookups](#query-lookups)
+    - [Compound queries](#compound-queries)
+  - [Reference of all query methods](#reference-of-all-query-methods)
+    - [Equality](#equality)
+    - [Arrays](#arrays)
+    - [Existence](#existence)
+    - [Regular expressions](#regular-expressions)
+    - [Compound queries](#compound-queries-1)
+    - [Sorting](#sorting)
+    - [Special queries](#special-queries)
+    - [Executing queries](#executing-queries)
+- [Contributing](#contributing)
+- [License](#license)
+
 ### Connecting to a database
 
 To connect to a database, you must create a new instance of Nebra. This can be done by importing the nebra function and then passing to it a string representing the path for the location of the database:
@@ -300,6 +333,7 @@ Querying a database is never an easy task, but Nebra tries to make it as simple 
 
 Nebra queries are heavily inspired by [Parse](https://parseplatform.org/), so if you're familiar with it you'll feel right at home.
 
+#### Basic queries
 To start a query you can use the `.query()` method on a collection, which will return a new query builder instance:
 
 ```typescript
@@ -431,7 +465,7 @@ You can find a list of all the available query methods [below](#reference-of-all
 
 ### Reference of all query methods
 
-#### Equality
+#### Equality 
 - `equalTo(field: string, value: any | any[])`: Checks if the value of the field is equal to the given value. If the value is an array, it will check if the field contains any of the values in the array. (Field must not be an array)
 - `notEqualTo(field: string, value: any | any[])`: Checks if the value of the field is not equal to the given value. If the value is an array, it will check if the field does not contain any of the values in the array.
 - `greaterThan(field: string, value: any)`: Checks if the value of the field is greater than the given value.
