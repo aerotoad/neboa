@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.4](https://github.com/aerotoad/nebra/compare/v0.0.3...v0.0.4) (2023-07-28)
+
+
+### Bug Fixes
+
+* Exports ([71a55cd](https://github.com/aerotoad/nebra/commit/71a55cd583354bb58b8fc7acc10708453e69639f))
+
 ## [0.0.3](https://github.com/aerotoad/nebra/compare/v0.0.2...v0.0.3) (2023-07-28)
 
 
