@@ -81,4 +81,18 @@ export class Nebra {
     return this._knex;
   }
 
+  /**
+   * Close the database connection
+   * Once closed, the database cannot be accessed anymore until a new Nebra instance is created
+   * @returns {Promise<void>}
+   * @throws {Error} If closing the connection fails
+   */
+  async close(): Promise<void> {
+    try {
+      await this._knex.destroy();
+    } catch (error) {
+      throw error;
+    }
+  }
+
 }
