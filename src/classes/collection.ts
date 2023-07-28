@@ -162,9 +162,9 @@ export class Collection<T = {}> {
    * @param document Document to delete
    * @returns A promise that resolves to true if the document was deleted
    */
-  async delete(document: Document<T>): Promise<Boolean> {
+  async delete(objectId: string): Promise<Boolean> {
     try {
-      await this._knex(this._name).where('id', document._id).del();
+      await this._knex(this._name).where('id', objectId).del();
       return true;
     } catch (error) {
       throw error;
