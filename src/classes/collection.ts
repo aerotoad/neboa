@@ -66,13 +66,41 @@ export class Collection<T = {}> {
    * @param document Document to update
    * @returns A promise that resolves to the updated document
    */
-  async update(document: Document<T>): Promise<Document<T>> {
-    document.updatedAt = new Date().toISOString();
-    const result = await this._knex(this._name).where('id', document._id).update({
-      data: JSON.stringify(document)
-    }).returning('data');
+  async update(objectId: string, document: T): Promise<Document<T>> {
 
-    return JSON.parse(result[0]?.data);
+    try {
+      const newDocument = this.newDocument(document);
+
+      // Create a new transaction
+      const trx = await this._knex.transaction();
+
+      // Get the existing document
+      const existingDocument = await trx(this._name).where('id', objectId).first();
+
+      if (!existingDocument) throw new Error('Document not found');
+
+      const existingDocumentData = JSON.parse(existingDocument.data);
+      const updatedDocument = {
+        ...existingDocumentData,
+        ...newDocument,
+        updatedAt: new Date().toISOString(),
+        _id: existingDocument.id,                  // Use the existing id to prevent user overwrites
+        createdAt: existingDocumentData.createdAt  // Use the existing createdAt to prevent user overwrites
+      };
+
+      // Update the document
+      await trx(this._name).where('id', objectId).update({
+        data: JSON.stringify(updatedDocument)
+      });
+      // Commit the transaction
+      await trx.commit();
+
+      // Return the updated document
+      return updatedDocument;
+    } catch (error) {
+      throw error;
+    }
+
   }
 
   /**
@@ -80,7 +108,7 @@ export class Collection<T = {}> {
    * @param documents Array of documents to update
    * @returns A promise that resolves to an array of updated documents
    */
-  async updateMany(documents: Document<T>[]): Promise<Document<T>[]> {
+  async updateMany(objectIds: string[], documents: Document<T>[]): Promise<Document<T>[]> {
     try {
       const newDocuments = documents.map(document => {
         document.updatedAt = new Date().toISOString();
@@ -90,8 +118,27 @@ export class Collection<T = {}> {
       // Create a new transaction
       const trx = await this._knex.transaction();
 
+      // Get the existing documents
+      const existingDocuments = await trx(this._name).whereIn('id', objectIds);
+
+      if (!existingDocuments) throw new Error('Documents not found');
+      if (existingDocuments.length !== newDocuments.length) throw new Error('Document mismatch');
+
       // Update each document
-      const result = await Promise.all(newDocuments.map(document => {
+      const updatedDocuments: Document<T>[] = existingDocuments.map((existingDocument, index) => {
+        const existingDocumentData = JSON.parse(existingDocument.data);
+        const updatedDocument = {
+          ...existingDocumentData,
+          ...newDocuments[index],
+          updatedAt: new Date().toISOString(),
+          _id: existingDocument.id,                  // Use the existing id to prevent user overwrites
+          createdAt: existingDocumentData.createdAt  // Use the existing createdAt to prevent user overwrites
+        };
+        return updatedDocument;
+      });
+
+      // Update each document
+      const result = await Promise.all(updatedDocuments.map(document => {
         return trx(this._name).where('id', document._id).update({
           data: JSON.stringify(document)
         }).returning('data');

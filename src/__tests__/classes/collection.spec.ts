@@ -68,8 +68,7 @@ describe('Collection class', () => {
     // Wait 100ms to ensure updatedAt is different
     await new Promise(resolve => setTimeout(resolve, 100));
 
-    const updated = await collection.update({
-      ...inserted,
+    const updated = await collection.update(inserted._id, {
       name: 'test2'
     });
 
@@ -78,6 +77,9 @@ describe('Collection class', () => {
 
     const knex = nebra.knex();
     const result = await knex('test').where('id', inserted._id);
+
+    console.log(inserted);
+    console.log(JSON.parse(result[0].data));
 
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
@@ -104,7 +106,7 @@ describe('Collection class', () => {
     // Wait 100ms to ensure updatedAt is different
     await new Promise(resolve => setTimeout(resolve, 100));
 
-    const updated = await collection.updateMany([
+    const updated = await collection.updateMany([inserted[0]._id, inserted[1]._id], [
       {
         ...inserted[0],
         name: 'test3'

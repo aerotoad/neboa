@@ -238,7 +238,7 @@ async function generateUsers(number: number, usernames: string[], Users: any, Po
       const post = await Posts.insert(newPost);
       user.postIds.push(post._id);
     }));
-    await Users.update(user);
+    await Users.update(user._id, user);
   });
 }
 
@@ -262,7 +262,7 @@ async function generateUsersWithCar(number: number, usernames: string[], Users: 
       const post = await Posts.insert(newPost);
       user.postIds.push(post._id);
     }))
-    await Users.update(user);
+    await Users.update(user._id, user);
   });
 }
 
