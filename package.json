@@ -1,7 +1,7 @@
 {
   "name": "nebra",
   "type": "module",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Type-safe NoSQL with Node & SQLite powered by Knex.",
   "author": "Samuel Bazaga",
   "license": "AGPL-3.0-or-later",

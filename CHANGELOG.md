@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.1.0](https://github.com/aerotoad/nebra/compare/v0.0.4...v0.1.0) (2023-07-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* **collection:** `delete()` now expects an objectId string.
+* **collection:** `deleteMany()` now expects an array of objectId strings.
+* **collection:** `update()` and `updateMany()` now require an ObjectId string as the first argument and the updated object as the second.
+
+* **collection:** Delete many now expects array of ids  ([d482f5d](https://github.com/aerotoad/nebra/commit/d482f5dcbc2f55d43a4b8acb4775fec02e0b6986))
+* **collection:** Delete now expects an objectId  ([9ec119e](https://github.com/aerotoad/nebra/commit/9ec119ed28d1958253762f45e9ded3c5d5296543))
+
+
+### Features
+
+* Add method to close the connection ([2b3b61f](https://github.com/aerotoad/nebra/commit/2b3b61f9e280769731cc506e2f602e4d0bb3f475))
+* **collection:** Improve updating logic ([a3b2fc3](https://github.com/aerotoad/nebra/commit/a3b2fc31a07c24abd51ff9c855ede0c9f456df2d))
+
 ## [0.0.4](https://github.com/aerotoad/nebra/compare/v0.0.3...v0.0.4) (2023-07-28)
 
 
