@@ -73,7 +73,34 @@ This example demonstrates how to create a new Nebra instance, create a new colle
 
 ## Documentation
 
-In progress
+### Connecting to a database
+
+To connect to a database, you must create a new instance of Nebra. This can be done by importing the nebra function and then passing to it a string representing the path for the location of the database:
+```typescript
+import { nebra } from 'nebra';
+
+const db = nebra('path/to/database.db') 
+```
+Alternatively you can pass `:memory:` to the instance to get an in-memory database.
+
+#### Testing the connection
+You can use the `.authenticate()` method to test the if the connection was successful:
+```typescript
+try {
+  await db.authenticate();
+  console.log('Connection has been established successfully.');
+} catch(error) {
+  console.error('Unable to connect to the database:', error);
+}
+```
+
+#### Closing the connection
+The connection will be kept open by default and will be used by all queries. 
+If you need to close it you can call the `.close()` method, which will return a promise.
+
+> Note: Once a connection is closed it cannot be reopened, you will need to create a new instance of nebra to access the database again.
+
+In progress...
 
 ## Contributing
 
