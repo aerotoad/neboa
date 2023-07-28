@@ -78,9 +78,6 @@ describe('Collection class', () => {
     const knex = nebra.knex();
     const result = await knex('test').where('id', inserted._id);
 
-    console.log(inserted);
-    console.log(JSON.parse(result[0].data));
-
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
     expect(result[0].id).toBe(inserted._id);
@@ -141,7 +138,7 @@ describe('Collection class', () => {
     expect(inserted).toBeDefined();
     expectTypeOf(inserted).toMatchTypeOf<NebraDocument<any>>();
 
-    const deleted = await collection.delete(inserted);
+    const deleted = await collection.delete(inserted._id);
 
     expect(deleted).toBeDefined();
     expect(deleted).toBe(true);
@@ -168,7 +165,7 @@ describe('Collection class', () => {
     expect(inserted).toBeDefined();
     expectTypeOf(inserted).toMatchTypeOf<NebraDocument<any>[]>();
 
-    const deleted = await collection.deleteMany(inserted);
+    const deleted = await collection.deleteMany(inserted.map((i: any) => i._id));
 
     expect(deleted).toBeDefined();
     expect(deleted).toBe(true);
