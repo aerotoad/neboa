@@ -47,7 +47,7 @@ npm install nebra
 Now that you have Nebra installed, you can start using it to manage your data with ease. Below is a basic example of how to set up and interact with the database using Nebra:
 
 ```typescript
-import { nebra } from 'nebra'; // Or const nebra = require('nebra') for CommonJs
+import { nebra } from 'nebra'; // Or const {nebra} = require('nebra') for CommonJs
 
 // Create a new Nebra instance and initialize the database
 const db = await nebra('path/to/database.db') // Or :memory: for in-memory sqlite
