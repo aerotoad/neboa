@@ -49,24 +49,24 @@ npm install nebra
 Now that you have Nebra installed, you can start using it to manage your data with ease. Below is a basic example of how to set up and interact with the database using Nebra:
 
 ```typescript
-import { nebra } from "nebra"; // Or const {nebra} = require('nebra') for CommonJs
+import { nebra } from 'nebra'; // Or const {nebra} = require('nebra') for CommonJs
 
 // Create a new Nebra instance and initialize the database
-const db = await nebra("path/to/database.db"); // Or :memory: for in-memory sqlite
+const db = await nebra('path/to/database.db'); // Or :memory: for in-memory sqlite
 
 // Add a collection to the tabase
-const Users = await db.collection("users");
+const Users = await db.collection('users');
 
 // Insert a new json document to the collection
 const user = await Users.insert({
-  name: "Darth Vader",
-  email: "i_am_your_father@deathstar.net",
+  name: 'Darth Vader',
+  email: 'i_am_your_father@deathstar.net',
 });
 
 // Create a new query for the collection
 const query = Users.query();
 // Add constraints
-query.equalTo("name", "Darth Vader");
+query.equalTo('name', 'Darth Vader');
 // Execute the query
 const results = await query.exec();
 console.log(results[0]); // { name: 'Darth Vader', email: 'i_am_your_father@deathstar.net'}
@@ -81,9 +81,9 @@ This example demonstrates how to create a new Nebra instance, create a new colle
 To connect to a database, you must create a new instance of Nebra. This can be done by importing the nebra function and then passing to it a string representing the path for the location of the database:
 
 ```typescript
-import { nebra } from "nebra";
+import { nebra } from 'nebra';
 
-const db = nebra("path/to/database.db");
+const db = nebra('path/to/database.db');
 ```
 
 Alternatively you can pass `:memory:` to the instance to get an in-memory database.
@@ -95,9 +95,9 @@ You can use the `.authenticate()` method to test the if the connection was succe
 ```typescript
 try {
   await db.authenticate();
-  console.log("Connection has been established successfully.");
+  console.log('Connection has been established successfully.');
 } catch (error) {
-  console.error("Unable to connect to the database:", error);
+  console.error('Unable to connect to the database:', error);
 }
 ```
 
@@ -106,7 +106,7 @@ try {
 The connection will be kept open by default and will be used by all queries.
 If you need to close it you can call the `.close()` method, which will return a promise.
 
-> Note: Once a connection is closed it cannot be reopened, you will need to create a new instance of nebra to access the database again.
+> **Note:** Once a connection is closed it cannot be reopened, you will need to create a new instance of nebra to access the database again.
 
 ### Collections
 
@@ -114,10 +114,10 @@ Collections are the primary way to organise your data in Nebra, each collection 
 A collection can be accessed by calling the `.collection()` function of the nebra instance:
 
 ```typescript
-import { nebra } from "nebra";
+import { nebra } from 'nebra';
 
-const db = await nebra("path/to/database.db");
-const Users = await db.collection("users");
+const db = await nebra('path/to/database.db');
+const Users = await db.collection('users');
 ```
 
 This will create a new table called users if it doesn't exist or a reference to it if it does, allowing you to perform queries to it.
@@ -125,16 +125,16 @@ This will create a new table called users if it doesn't exist or a reference to 
 You can also specify the type of the documents in the collection easily by passing the type to the collection method:
 
 ```typescript
-import { nebra } from "nebra";
+import { nebra } from 'nebra';
 
-const db = await nebra("path/to/database.db");
+const db = await nebra('path/to/database.db');
 
 interface User {
   username: string;
   password: string;
 }
 
-const Users = await db.collection<User>("users");
+const Users = await db.collection<User>('users');
 ```
 
 Querying the collection now will return an array of `Document<User>`, the `Document<T>` type wraps your interface and adds the required \_id and timestamp fields added by Nebra.
@@ -156,11 +156,11 @@ After we have our collection created, we can start inserting documents into them
 To insert a new document into our collection we can use the `.insert()` method:
 
 ```typescript
-const Users = await db.collection("users");
+const Users = await db.collection('users');
 const user = await user.insert({
-  username: "NeoTheOne",
-  email: "neo@matrix.com",
-  password: "redpillbluepill",
+  username: 'NeoTheOne',
+  email: 'neo@matrix.com',
+  password: 'redpillbluepill',
 });
 ```
 
@@ -169,28 +169,214 @@ The `.insert()` method will return a promise that resolves to the inserted docum
 You can also insert multiple documents at once by using the `.insertMany()` method, which takes an array of documents and returns a promise that resolves to an array of the inserted documents.
 
 ```typescript
-const Users = await db.collection("users");
+const Users = await db.collection('users');
 const newUsers = await user.insertMany([
   {
-    username: "GandalfTheGrey",
-    email: "gandalf@middleearth.com",
-    password: "youshallnotpass",
+    username: 'GandalfTheGrey',
+    email: 'gandalf@middleearth.com',
+    password: 'youshallnotpass',
   },
   {
-    username: "PrincessLeia",
-    email: "leia@rebelalliance.com",
-    password: "helpmeobiwankenobi",
+    username: 'PrincessLeia',
+    email: 'leia@rebelalliance.com',
+    password: 'helpmeobiwankenobi',
   },
 ]);
 ```
 
 ### Updating documents
 
-To update a document in a collection you can use the `.update()` method, which takes a document that belongs to the collection with the updated values and returns a promise that resolves to the updated document with the timestamp fields updated by Nebra.
+To update a document in a collection you can use the `.update()` method, which takes an ObjectID string as the first argument and the updated document as the second.
+The update can be partial since the method will merge the new document with the existing one, only updating the fields that are present in the new document.
 
 ```typescript
+const Users = await db.collection('users');
+const user = await Users.insert({
+  username: 'CaptainJackSparrow',
+  email: 'jack@blackpearl.com',
+  password: 'savvymehearties',
+});
 
+const updated = await Users.update(user._id, {
+  password: 'xmarksthespot',
+});
+
+console.log(updated.password); // xmarksthespot
+console.log(user.createdAt !== updated.updatedAt); // true
 ```
+
+You can also update multiple documents at once by using the `.updateMany()` method, which takes an array of ObjectID strings as the first argument and an array of the corresponding updated documents as the second.
+
+```typescript
+const Users = await db.collection('users');
+const users = await Users.insertMany([
+  {
+    username: 'MartyMcFly',
+    email: 'marty@timemachine.com',
+    password: '88milesperhour',
+  },
+  {
+    username: 'DarthVader',
+    email: 'vader@empire.com',
+    password: 'iamyourfather',
+  },
+]);
+
+const updatedUsers = await Users.updateMany(
+  [users[0]._id, users[1]._id],
+  [
+    {
+      password: 'fluxcapacitor',
+    },
+    {
+      password: 'darksideforce',
+    },
+  ]
+);
+```
+
+### Deleting documents
+
+To delete a document from a collection you can use the `.delete()` method, which takes an ObjectID string as the first argument and returns a promise that resolves to true if the document was deleted:
+
+```typescript
+const Users = await db.collection('users');
+const user = await Users.insert({
+  username: 'HermioneGranger',
+  email: 'hermione@hogwarts.com',
+  password: 'wingardiumleviosa',
+});
+
+const deleted = await Users.delete(user._id);
+console.log(deleted); // true
+```
+
+You can also delete multiple documents at once by using the `.deleteMany()` method, which takes an array of ObjectID strings as the first argument and returns a promise that resolves to true if all the documents were deleted:
+
+```typescript
+const Users = await db.collection('users');
+const users = await Users.insertMany([
+  {
+    username: 'TonyStark',
+    email: 'tony@starkindustries.com',
+    password: 'iloveyou3000',
+  },
+  {
+    username: 'DoryTheFish',
+    email: 'dory@findingsomedory.com',
+    password: 'justkeepswimming',
+  },
+]);
+
+const deleted = await Users.deleteMany([
+  users[0]._id, 
+  users[1]._id
+]);
+
+console.log(deleted); // true
+```
+
+### Renaming collections
+
+To rename a collection you can use the `.rename()` method, which takes the new name as the first argument and returns a promise.
+
+```typescript
+const Users = await db.collection('users');
+await Users.rename('people');
+```
+
+### Dropping collections
+
+To drop a collection you can use the `.drop()` method:
+
+```typescript
+const Users = await db.collection('users');
+await Users.drop();
+```
+
+### Queries
+
+Querying a database is never an easy task, but Nebra tries to make it as simple as possible by providing a simple, yet powerful, query builder.
+
+Nebra queries are heavily inspired by [Parse](https://parseplatform.org/), so if you're familiar with it you'll feel right at home.
+
+To start a query you can use the `.query()` method on a collection, which will return a new query builder instance:
+
+```typescript
+const Users = await db.collection('users');
+const query = Users.query();
+```
+Once you have a query builder instance you can start building your query by using the various query methods available. All query methods return the query builder instance, so you can chain them together to build your query.
+
+> **Note:** Query methods are additive, so calling the same method multiple times will add multiple conditions to the query.
+
+> **Note:** `.exec()` and `.count()` are the only methods that do not return the query builder instance, but instead return a promise that resolves to the result of the query.
+
+```typescript
+const Users = await db.collection('users');
+const query = Users.query()
+  .equalTo('username', 'MartyMcFly')
+  .notEqualTo('email', 'vader@empire.com')
+
+const result = await query.exec();
+console.log(result); // Array of documents
+```
+A query will always return an array of documents, even if only one document matches the query. If no documents match the query, an empty array will be returned.
+
+To count the number of documents that match a query you can use the `.count()` method:
+
+```typescript
+const Users = await db.collection('users');
+const query = Users.query()
+  .equalTo('username', 'TonyStark')
+  
+const count = await query.count();
+console.log(count); // 1
+```
+
+You can find a list of all the available query methods [below](#reference-of-all-query-methods).
+
+### Reference of all query methods
+
+#### Equality
+- `equalTo(field: string, value: any | any[])`: Checks if the value of the field is equal to the given value. If the value is an array, it will check if the field contains any of the values in the array. (Field must not be an array)
+- `notEqualTo(field: string, value: any | any[])`: Checks if the value of the field is not equal to the given value. If the value is an array, it will check if the field does not contain any of the values in the array.
+- `greaterThan(field: string, value: any)`: Checks if the value of the field is greater than the given value.
+- `greaterThanOrEqualTo(field: string, value: any)`: Checks if the value of the field is greater than or equal to the given value.
+- `lessThan(field: string, value: any)`: Checks if the value of the field is less than the given value.
+- `lessThanOrEqualTo(field: string, value: any)`: Checks if the value of the field is less than or equal to the given value.
+
+#### Arrays
+- `containedIn(field: string, values: any[])`: Checks if the array in the field contains any of the given values. (Field must be an array)
+- `notContainedIn(field: string, values: any[])`: Checks if the array in the field does not contain any of the given values. (Field must be an array)
+
+#### Existence
+- `exists(field: string)`: Checks if the field exists.
+- `notExists(field: string)`: Checks if the field does not exist.
+
+#### Regular expressions
+- `matches(field: string, regex: RegExp)`: Checks if the value of the field matches the given regular expression.
+- `doesNotMatch(field: string, regex: RegExp)`: Checks if the value of the field does not match the given regular expression.
+
+#### Compound queries
+- `or(query: Query)`: Combines the current query with the given query using the OR operator.
+- `and(query: Query)`: Combines the current query with the given query using the AND operator.
+
+#### Sorting
+- `limit(limit: number)`: Limits the number of documents returned by the query.
+- `skip(skip: number)`: Skips the first n documents returned by the query.
+- `first()`: Returns the first document returned by the query.
+- `last()`: Returns the last document returned by the query.
+- `ascending(field: string)`: Sorts the documents in ascending order by the given field.
+- `descending(field: string)`: Sorts the documents in descending order by the given field.
+
+#### Special queries
+- `fullText(field: string, value: string)`: Checks if the value of the field contains the given value using SQL's LIKE operator.
+- `lookup(options: LookupOptions)`: Performs a lookup to another collection.
+
+#### Executing queries
+- `exec()`: Executes the query and returns a promise that resolves to an array of documents.
+- `count()`: Executes the query and returns a promise that resolves to the number of documents returned by the query.
 
 In progress...
 
@@ -203,3 +389,4 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 ## License
 
 See the [LICENSE](LICENSE) file for license rights and limitations (Affero General Public License v3.0).
+
