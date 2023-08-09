@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { Nebra } from "../../classes/nebra";
 import { faker } from '@faker-js/faker';
 
-describe('Collection class', async () => {
+describe('Query class', async () => {
 
   // Create a test database
   const nebra = new Nebra(':memory:');
