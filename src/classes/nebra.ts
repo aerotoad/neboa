@@ -1,6 +1,7 @@
 import RegexParser from 'regex-parser';
 import { Collection } from './collection';
 import Database, { Database as DatabaseConstructor } from 'better-sqlite3';
+import { DatabaseOptions } from '../types/database-options';
 
 export class Nebra {
 
@@ -12,11 +13,7 @@ export class Nebra {
    * If :memory: is used, the database will be stored in memory and will not be persistent
    * This path is passed directly to the Knex instance and it uses the better-sqlite3 driver
    */
-  constructor(path: string, options: {
-    fileMustExist?: boolean;
-    timeout?: number;
-    nativeBinding?: string | undefined;
-  } = {}) {
+  constructor(path: string, options: DatabaseOptions = {}) {
     this._database = new Database(path, options);
     this._database.function('regexp', { deterministic: true }, (regex: unknown, text: unknown) => {
       return RegexParser(regex as string).test(text as string) ? 1 : 0;
