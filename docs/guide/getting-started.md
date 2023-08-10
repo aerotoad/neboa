@@ -1,10 +1,6 @@
 
 # Getting Started
 
-## Try it online
-
-TODO: Add stackblitz example
-
 ## Installation
 
 ### Prerequisites
