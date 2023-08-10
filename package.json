@@ -5,14 +5,8 @@
   "description": "Type-safe NoSQL with Node & SQLite.",
   "author": "Samuel Bazaga",
   "license": "AGPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/aerotoad/nebra/issues"
-  },
-  "homepage": "https://github.com/aerotoad/nebra#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/aerotoad/nebra.git"
-  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
@@ -33,6 +27,14 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs"
+  },
+  "bugs": {
+    "url": "https://github.com/aerotoad/nebra/issues"
+  },
+  "homepage": "https://github.com/aerotoad/nebra#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aerotoad/nebra.git"
   },
   "keywords": [
     "sqlite",
