@@ -66,35 +66,6 @@ export class Query<T = any> {
     return this;
   }
 
-  // Pagination operators
-  limit(limit: number) {
-    this._queryBuilder.limit(limit);
-    return this;
-  }
-  skip(skip: number) {
-    this._queryBuilder.skip(skip);
-    return this;
-  }
-  first() {
-    this._queryBuilder.limit(1);
-    return this;
-  }
-  last() {
-    //this._queryBuilder.orderBy('id', 'desc').limit(1);
-    this._queryBuilder.sort('id', 'desc').limit(1);
-    return this;
-  }
-
-  // Sorting operators
-  ascending(field: string) {
-    this._queryBuilder.sort(field, 'asc');
-    return this;
-  }
-  descending(field: string) {
-    this._queryBuilder.sort(field, 'desc');
-    return this;
-  }
-
   // Array operators
   containedIn(field: string, values: any[]) {
     // Use json_each to iterate over the array and check if the value is contained in the array
@@ -173,6 +144,35 @@ export class Query<T = any> {
   // Relational operators
   lookup(options: LookupOptions) {
     this.lookups.push(options);
+    return this;
+  }
+
+  // Pagination operators
+  limit(limit: number) {
+    this._queryBuilder.limit(limit);
+    return this;
+  }
+  skip(skip: number) {
+    this._queryBuilder.skip(skip);
+    return this;
+  }
+  first() {
+    this._queryBuilder.limit(1);
+    return this;
+  }
+  last() {
+    //this._queryBuilder.orderBy('id', 'desc').limit(1);
+    this._queryBuilder.sort('id', 'desc').limit(1);
+    return this;
+  }
+
+  // Sorting operators
+  ascending(field: string) {
+    this._queryBuilder.sort(field, 'asc');
+    return this;
+  }
+  descending(field: string) {
+    this._queryBuilder.sort(field, 'desc');
     return this;
   }
 
