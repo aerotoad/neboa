@@ -134,13 +134,13 @@ const query = Users.query()
   .doesNotMatch('name', /^John/)
 ```
 
-## `fullText`
+## `like`
 
-SQLite does not have a built-in full-text search feature, but Nebra uses the LIKE operator to provide a basic full-text search feature.
+SQLite does not have a built-in full-text search feature, but Nebra can use LIKE operator to provide a basic search capability.
 
 ```ts
 const query = Users.query()
-  .fullText('name', 'John') // LIKE '%John%'
+  .like('name', 'John') // LIKE '%John%'
 ```
 
 ## `limit`
