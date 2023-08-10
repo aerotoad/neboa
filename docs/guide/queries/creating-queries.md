@@ -28,11 +28,52 @@ const result = query.exec()
 ```
 Creating queries this way also allows you reuse the query instance, which can be useful in some cases.
 
-Besides the `exec` method, you can also use the `count` method to count the number of documents that match the query.
+## Executing Queries
+
+To execute a query, there are multiple methods available on the query instance, depending on the type of result you want to get.
+
+### `exec`
+
+The `exec` method is the main way of executing a query. It will return an array of documents that match the query following exactly every constraint you set.
 
 ```ts
 const query = Users.query()
   .equalTo('name', 'John Doe')
 
-const count = query.count() // 1
+const result = query.exec() // [ { _id: '...', name: 'John Doe' } ]
+```
+
+### `first`
+
+The `first` method will return the first document that matches the query.
+It does so by adding a limit of 1 to the query and returning the first document of the result.
+
+```ts
+const query = Users.query()
+  .equalTo('name', 'John Doe')
+
+const result = query.first() // { _id: '...', name: 'John Doe' }
+```
+
+### `last`	
+
+The `last` method will return the last document that matches the query.
+It does so by sorting the query in descending order by the `_id` field and returning the first document of the result.
+
+```ts
+const query = Users.query()
+  .equalTo('name', 'John Doe')
+
+const result = query.last() // { _id: '...', name: 'John Doe' }
+```
+
+### `count`
+
+The `count` method will return the number of documents that match the query.
+
+```ts
+const query = Users.query()
+  .equalTo('name', 'John Doe')
+
+const result = query.count() // 1
 ```
