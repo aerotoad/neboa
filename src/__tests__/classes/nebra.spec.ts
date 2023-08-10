@@ -14,20 +14,20 @@ describe('Nebra class', () => {
     expect(authenticated).toBe(true);
   });
 
-  it('should have a working knex instance', async () => {
+  it('should have a working sqlite3 instance', async () => {
     const nebra = new Nebra(':memory:');
-    const knex = nebra.knex();
-    const result = await knex.raw('SELECT 1 + 1 AS result');
-    expect(result[0].result).toBe(2);
+    const db = nebra.connection();
+    const { result } = db.prepare('SELECT 1 + 1 AS result').get() as any;
+    expect(result).toBe(2);
   });
 
   it('should be able to create a collection', async () => {
     const nebra = new Nebra(':memory:');
     const collection = await nebra.collection('test');
     expect(collection).toBeDefined();
-    const knex = nebra.knex();
-    const exists = await knex.schema.hasTable('test');
-    expect(exists).toBe(true);
+    const db = nebra.connection();
+    const exists = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name='test'`).pluck().get() as any;
+    expect(exists).not.toBeUndefined();
   });
 
   it('should be able to access a collection', async () => {

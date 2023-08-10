@@ -1,19 +1,21 @@
-import knex from "knex";
 import { Collection } from "./collection";
 import { LookupOptions } from "../types/lookup-options";
 import { formatValue } from "../functions/format-value";
+import { Database } from "better-sqlite3";
+import { QueryBuilder } from "./query-builder";
+import { Document } from '../types/document';
 
 export class Query<T = any> {
 
-  public _queryBuilder: any;
+  public _queryBuilder: QueryBuilder;
 
   public lookups: LookupOptions[] = [];
 
   constructor(
-    private _knex: ReturnType<typeof knex>,
+    private _database: Database,
     private _collection: string
   ) {
-    this._queryBuilder = this._knex(this._collection);
+    this._queryBuilder = new QueryBuilder(this._database, this._collection);
   }
 
   /**
@@ -23,132 +25,120 @@ export class Query<T = any> {
    * All methods use raw json_extract or .withJsonPath() to query json in the data column of the table
    */
 
-  // Equality operators
-  equalTo(field: string, value: any | any[]) {
-    if (Array.isArray(value)) {
-      this._queryBuilder.whereRaw(`json_extract(data, '$.${field}') IN (${formatValue(value)})`);
-    } else {
-      this._queryBuilder.whereRaw(`json_extract(data, '$.${field}') = ${formatValue(value)}`);
-    }
+  // Equality operators (can be anything but object or array)
+  equalTo(field: string, value: string | number | boolean | null) {
+    this._queryBuilder.where(`
+      (SELECT 1 FROM JSON_EACH(data, '$.${field}') WHERE value = ${formatValue(value)})
+    `)
     return this;
   }
+
+
   notEqualTo(field: string, value: any | any[]) {
-    if (Array.isArray(value)) {
-      this._queryBuilder.whereRaw(`json_extract(data, '$.${field}') NOT IN (${formatValue(value)})`);
-    } else {
-      this._queryBuilder.whereRaw(`json_extract(data, '$.${field}') != ${formatValue(value)}`);
-    }
+    this._queryBuilder.where(`
+      (SELECT 1 FROM JSON_EACH(data, '$.${field}') WHERE value != ${formatValue(value)})
+    `);
     return this;
   }
 
   // Comparison operators
   greaterThan(field: string, value: any) {
-    this._queryBuilder.whereRaw(`json_extract(data, '$.${field}') > ${formatValue(value)}`);
+    this._queryBuilder.where(`
+      (SELECT 1 FROM JSON_EACH(data, '$.${field}') WHERE value > ${formatValue(value)})
+    `);
     return this;
   }
   greaterThanOrEqualTo(field: string, value: any) {
-    this._queryBuilder.whereRaw(`json_extract(data, '$.${field}') >= ${formatValue(value)}`);
+    this._queryBuilder.where(`
+      (SELECT 1 FROM JSON_EACH(data, '$.${field}') WHERE value >= ${formatValue(value)})
+    `);
     return this;
   }
   lessThan(field: string, value: any) {
-    this._queryBuilder.whereRaw(`json_extract(data, '$.${field}') < ${formatValue(value)}`);
+    this._queryBuilder.where(`
+      (SELECT 1 FROM JSON_EACH(data, '$.${field}') WHERE value < ${formatValue(value)})
+    `);
     return this;
   }
   lessThanOrEqualTo(field: string, value: any) {
-    this._queryBuilder.whereRaw(`json_extract(data, '$.${field}') <= ${formatValue(value)}`);
-    return this;
-  }
-
-  // Pagination operators
-  limit(limit: number) {
-    this._queryBuilder.limit(limit);
-    return this;
-  }
-  skip(skip: number) {
-    this._queryBuilder.offset(skip);
-    return this;
-  }
-  first() {
-    this._queryBuilder.limit(1);
-    return this;
-  }
-  last() {
-    this._queryBuilder.orderBy('id', 'desc').limit(1);
-    return this;
-  }
-
-  // Sorting operators
-  ascending(field: string) {
-    this._queryBuilder.orderBy(this._knex.raw(`json_extract(data, '$.${field}')`) as any, 'asc');
-    return this;
-  }
-  descending(field: string) {
-    this._queryBuilder.orderBy(this._knex.raw(`json_extract(data, '$.${field}')`) as any, 'desc');
+    this._queryBuilder.where(`
+      (SELECT 1 FROM JSON_EACH(data, '$.${field}') WHERE value <= ${formatValue(value)})
+    `);
     return this;
   }
 
   // Array operators
   containedIn(field: string, values: any[]) {
     // Use json_each to iterate over the array and check if the value is contained in the array
-    this._queryBuilder.whereExists(
-      this._knex.raw(`SELECT 1 FROM json_each(data, '$.${field}') WHERE value IN (${formatValue(values)})`) as any
-    );
+    this._queryBuilder.where(`
+      (SELECT 1 FROM JSON_EACH(data, '$.${field}') WHERE value IN (${values.map((val) => formatValue(val)).join(',')}))
+    `);
     return this;
   }
   notContainedIn(field: string, values: any[]) {
     // Use json_each to iterate over the array and check if the value is contained in the array
-    this._queryBuilder.whereNotExists(
-      this._knex.raw(`SELECT 1 FROM json_each(data, '$.${field}') WHERE value IN (${formatValue(values)})`) as any
-    );
+    this._queryBuilder.where(`
+      (SELECT 1 FROM JSON_EACH(data, '$.${field}') WHERE value IN (${values.map((val) => formatValue(val)).join(',')})) IS NULL
+    `);
     return this;
   }
 
   // Element operators
   exists(field: string) {
-    this._queryBuilder.whereRaw(`json_extract(data, '$.${field}') IS NOT NULL`);
+    this._queryBuilder.where(`
+      JSON_EXTRACT(data, '$.${field}') IS NOT NULL
+    `)
     return this;
   }
   notExists(field: string) {
-    this._queryBuilder.whereRaw(`json_extract(data, '$.${field}') IS NULL`);
+    this._queryBuilder.where(`
+      JSON_EXTRACT(data, '$.${field}') IS NULL
+    `)
     return this;
   }
 
   // Evaluation operators (regex)
   matches(field: string, regex: RegExp) {
     // Use the REGEXP function to check if the field matches the regex
-    this._queryBuilder.whereRaw(`json_extract(data, '$.${field}') REGEXP '${regex.toString()}'`);
+    this._queryBuilder.where(`
+      (SELECT 1 FROM JSON_EACH(data, '$.${field}') WHERE value REGEXP '${regex.toString()}')
+    `);
     return this;
   }
   doesNotMatch(field: string, regex: RegExp) {
     // Use the REGEXP function to check if the field matches the regex
-    this._queryBuilder.whereRaw(`json_extract(data, '$.${field}') NOT REGEXP '${regex.toString()}'`);
+    this._queryBuilder.where(`
+      (SELECT 1 FROM JSON_EACH(data, '$.${field}') WHERE value REGEXP '${regex.toString()}') IS NULL
+    `);
     return this;
   }
 
   // Logical operators
   or(query: Query) {
-    const clone = query._queryBuilder.clone();
+    const clone = query._queryBuilder.statement();
     const serialized = clone.toString();
     // Take everything after the first WHERE clause
-    const whereClause = serialized.split('where ')[1];
+    const whereClause = serialized.split('WHERE ')[1];
     // Add the AND query to the original query
-    this._queryBuilder.orWhere(this._knex.raw(`${whereClause}`));
+    this._queryBuilder.or(`(${whereClause})`);
     return this;
   }
 
   and(query: Query) {
-    const clone = query._queryBuilder.clone();
+    const clone = query._queryBuilder.statement();
     const serialized = clone.toString();
     // Take everything after the first WHERE clause
-    const whereClause = serialized.split('where ')[1];
+    const whereClause = serialized.split('WHERE ')[1];
     // Add the AND query to the original query
-    this._queryBuilder.andWhere(this._knex.raw(`${whereClause}`));
+    this._queryBuilder.and(`(${whereClause})`);
     return this;
   }
 
   // Search
-  fullText(field: string, value: string) {
-    this._queryBuilder.whereRaw(`json_extract(data, '$.${field}') LIKE '%${value}%'`);
+  like(field: string, value: string) {
+    this._queryBuilder.where(`
+      (SELECT 1 FROM JSON_EACH(data, '$.${field}') WHERE value LIKE '%${value}%')
+    `);
     return this;
   }
 
@@ -158,59 +148,83 @@ export class Query<T = any> {
     return this;
   }
 
+  // Pagination operators
+  limit(limit: number) {
+    this._queryBuilder.limit(limit);
+    return this;
+  }
+  skip(skip: number) {
+    this._queryBuilder.skip(skip);
+    return this;
+  }
+
+  // Sorting operators
+  ascending(field: string) {
+    this._queryBuilder.sort(field, 'asc');
+    return this;
+  }
+  descending(field: string) {
+    this._queryBuilder.sort(field, 'desc');
+    return this;
+  }
+
+  // Executes the query and returns the first document
+  first(): Document<T> {
+    this._queryBuilder.limit(1);
+    return this.exec()[0];
+  }
+
+  // Executes the query and returns the last document
+  last() {
+    this._queryBuilder.sort('id', 'desc').limit(1);
+    return this.exec()[0];
+  }
+
   /**
    * Exec method
-   * Executes the query and returns the documents
+   * Executes the query and returns the documents as an array
    */
-  async exec(): Promise<Array<T>> {
+  exec(): Array<Document<T>> {
     try {
-      // Pluck only the data column from the query
-      this._queryBuilder.queryContext({ parseColumn: 'data' });
-      const documents = await this._queryBuilder;
-
-      let result: Promise<any>[] = [];
-
-      result = documents.map(async (document: { id: string, data: string }) => {
-        const parsedDocument = JSON.parse(document.data);
+      // Get the docs
+      const documents = this._queryBuilder.statement().all().map((doc: any) => {
+        const parsedDocument = JSON.parse(doc.data);
 
         // Apply lookups
         for (let lookup of this.lookups) {
           const { from, localField, foreignField, as, limit, skip, sort } = lookup;
-          const lookupCollection = new Collection(this._knex, from);
-          const lookupQuery = lookupCollection.query();
+          //const lookupCollection = new Collection(this._knex, from);
+          const lookupQuery = new Query(this._database, from);
           if (Array.isArray(parsedDocument[localField])) {
             lookupQuery.containedIn(foreignField, parsedDocument[localField]);
             if (limit) lookupQuery.limit(limit);
             if (skip) lookupQuery.skip(skip);
             if (sort) {
               Object.keys(sort).forEach((field) => {
-                if (sort[field] === 'asc') lookupQuery.ascending(field);
-                if (sort[field] === 'desc') lookupQuery.descending(field);
+                lookupQuery.ascending(field);
               });
             }
+            const result = lookupQuery.exec();
+            parsedDocument[as] = result;
           } else {
             lookupQuery.equalTo(foreignField, parsedDocument[localField]);
+            const result = lookupQuery.exec();
+            parsedDocument[as] = result;
           }
-
-          parsedDocument[as] = await lookupQuery.exec();
         }
+
         return parsedDocument;
       });
 
-      return await Promise.all(result);
+      return documents;
     } catch (error) {
       throw error;
     }
   }
 
-  async count(): Promise<number> {
+  count(): number {
     try {
-      // Use a copy of the query builder to avoid modifying the original query
-      const countQueryBuilder = this._queryBuilder.clone();
-      // Count all the documents
-      countQueryBuilder.count();
-      const count = await countQueryBuilder;
-      return count[0]['count(*)'];
+      return this._queryBuilder.count().pluck().get() as number;
     } catch (error) {
       throw error;
     }

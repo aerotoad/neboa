@@ -1,13 +1,12 @@
-import knex from 'knex';
 import ObjectID from 'bson-objectid';
 import { Query } from './query';
 import { Document } from '../types/document';
-import assert from 'node:assert';
+import { Database } from 'better-sqlite3';
 
 export class Collection<T = {}> {
 
   constructor(
-    private _knex: ReturnType<typeof knex>,
+    private _database: Database,
     private _name: string
   ) { }
 
@@ -16,22 +15,22 @@ export class Collection<T = {}> {
    * @returns A new query instance
    */
   query() {
-    return new Query<T>(this._knex, this._name);
+    return new Query<T>(this._database, this._name);
   }
 
   /**
    * Inserts a new document into the collection
    * @param document Document to insert
-   * @returns A promise that resolves to the inserted document
+   * @returns The inserted document
    */
-  async insert(document: T): Promise<Document<T>> {
+  insert(document: T): Document<T> {
     try {
       const newDocument = this.newDocument(document);
-      const result = await this._knex(this._name).insert({
-        id: newDocument._id,
-        data: newDocument
-      }).returning('data');
-      return JSON.parse(result[0]?.data);
+      this._database.prepare(`
+        INSERT INTO ${this._name} (id, data)
+        VALUES ('${newDocument._id}', '${JSON.stringify(newDocument)}');
+      `).run();
+      return newDocument;
     } catch (error) {
       throw error;
     }
@@ -40,9 +39,9 @@ export class Collection<T = {}> {
   /**
    * Inserts multiple documents into the collection
    * @param documents Inserts multiple documents into the collection
-   * @returns A promise that resolves to an array of inserted documents
+   * @returns An array of inserted documents
    */
-  async insertMany(documents: T[]): Promise<Document<T>[]> {
+  insertMany(documents: T[]): Document<T>[] {
     try {
       const newDocuments = documents.map(document => this.newDocument(document));
 
@@ -51,11 +50,12 @@ export class Collection<T = {}> {
         data: JSON.stringify(document)
       }));
 
-      const result = await this._knex(this._name).insert(insertionData).returning('data');
-      return result.map((obj: { id: string, data: string }) => {
-        const document = JSON.parse(obj?.data);
-        return document;
-      });
+      this._database.prepare(`
+        INSERT INTO ${this._name} (id, data)
+        VALUES ${insertionData.map(data => `('${data.id}', '${data.data}')`).join(', ')};
+      `).run();
+
+      return newDocuments;
     } catch (error) {
       throw error;
     }
@@ -64,39 +64,26 @@ export class Collection<T = {}> {
   /**
    * Updates a document in the collection
    * @param document Document to update
-   * @returns A promise that resolves to the updated document
+   * @returns The updated document
    */
-  async update(objectId: string, document: T): Promise<Document<T>> {
+  update(objectId: string, document: T): Document<T> {
 
     try {
-      const newDocument = this.newDocument(document);
-
-      // Create a new transaction
-      const trx = await this._knex.transaction();
-
-      // Get the existing document
-      const existingDocument = await trx(this._name).where('id', objectId).first();
-
-      if (!existingDocument) throw new Error('Document not found');
-
-      const existingDocumentData = JSON.parse(existingDocument.data);
       const updatedDocument = {
-        ...existingDocumentData,
-        ...newDocument,
         updatedAt: new Date().toISOString(),
-        _id: existingDocument.id,                  // Use the existing id to prevent user overwrites
-        createdAt: existingDocumentData.createdAt  // Use the existing createdAt to prevent user overwrites
+        ...document,
+        _id: objectId,
       };
 
-      // Update the document
-      await trx(this._name).where('id', objectId).update({
-        data: JSON.stringify(updatedDocument)
-      });
-      // Commit the transaction
-      await trx.commit();
+      const result = this._database.prepare(`
+        UPDATE ${this._name}
+        SET data = '${JSON.stringify(updatedDocument)}'
+        WHERE id = '${objectId}'
+        RETURNING *;
+      `).get() as any;
 
-      // Return the updated document
-      return updatedDocument;
+      return JSON.parse(result.data);
+      //return updatedDocument;
     } catch (error) {
       throw error;
     }
@@ -106,52 +93,35 @@ export class Collection<T = {}> {
   /**
    * Updates multiple documents in the collection
    * @param documents Array of documents to update
-   * @returns A promise that resolves to an array of updated documents
+   * @returns An array of updated documents
    */
-  async updateMany(objectIds: string[], documents: Document<T>[]): Promise<Document<T>[]> {
+  updateMany(objectIds: string[], documents: Document<T>[]): Document<T>[] {
     try {
       const newDocuments = documents.map(document => {
         document.updatedAt = new Date().toISOString();
         return document;
       });
 
-      // Create a new transaction
-      const trx = await this._knex.transaction();
+      let updatedDocuments: Document<T>[] = [];
 
-      // Get the existing documents
-      const existingDocuments = await trx(this._name).whereIn('id', objectIds);
+      const transaction = this._database.transaction(() => {
+        const stmt = this._database.prepare(`
+          UPDATE ${this._name}
+          SET data = ?
+          WHERE id = ?
+          RETURNING *;
+        `);
+        for (const [index, document] of newDocuments.entries()) {
+          const result = stmt.get(JSON.stringify(document), objectIds[index]) as any;
+          updatedDocuments.push(JSON.parse(result.data));
+        }
+      })
 
-      if (!existingDocuments) throw new Error('Documents not found');
-      if (existingDocuments.length !== newDocuments.length) throw new Error('Document mismatch');
+      // Run the transaction
+      transaction();
 
-      // Update each document
-      const updatedDocuments: Document<T>[] = existingDocuments.map((existingDocument, index) => {
-        const existingDocumentData = JSON.parse(existingDocument.data);
-        const updatedDocument = {
-          ...existingDocumentData,
-          ...newDocuments[index],
-          updatedAt: new Date().toISOString(),
-          _id: existingDocument.id,                  // Use the existing id to prevent user overwrites
-          createdAt: existingDocumentData.createdAt  // Use the existing createdAt to prevent user overwrites
-        };
-        return updatedDocument;
-      });
+      return updatedDocuments;
 
-      // Update each document
-      const result = await Promise.all(updatedDocuments.map(document => {
-        return trx(this._name).where('id', document._id).update({
-          data: JSON.stringify(document)
-        }).returning('data');
-      }));
-
-      // Commit the transaction
-      await trx.commit();
-
-      // Return the updated documents
-      return result[0].map((obj: { id: string, data: string }) => {
-        const document = JSON.parse(obj?.data);
-        return document;
-      });
     } catch (error) {
       throw error;
     }
@@ -160,11 +130,14 @@ export class Collection<T = {}> {
   /**
    * Deletes a document from the collection
    * @param document Document to delete
-   * @returns A promise that resolves to true if the document was deleted
+   * @returns True if the document was deleted
    */
-  async delete(objectId: string): Promise<Boolean> {
+  delete(objectId: string): Boolean {
     try {
-      await this._knex(this._name).where('id', objectId).del();
+      this._database.prepare(`
+        DELETE FROM ${this._name}
+        WHERE id = '${objectId}';
+      `).run();
       return true;
     } catch (error) {
       throw error;
@@ -174,11 +147,14 @@ export class Collection<T = {}> {
   /**
    * Deletes multiple documents from the collection
    * @param documents Array of documents to delete
-   * @returns A promise that resolves to true if the documents were deleted
+   * @returns True if the documents were deleted
    */
-  async deleteMany(objectIds: string[]): Promise<Boolean> {
+  deleteMany(objectIds: string[]): Boolean {
     try {
-      await this._knex(this._name).whereIn('id', objectIds).del();
+      this._database.prepare(`
+        DELETE FROM ${this._name}
+        WHERE id IN (${objectIds.map(id => `'${id}'`).join(', ')});
+      `).run();
       return true;
     } catch (error) {
       throw error;
@@ -190,16 +166,31 @@ export class Collection<T = {}> {
    * This is a destructive operation and cannot be undone
    * It will remove the associated table from the database
    */
-  drop(): Promise<void> {
-    return this._knex.schema.dropTable(this._name)
+  drop(): boolean {
+    try {
+      this._database.prepare(`
+        DROP TABLE ${this._name};
+      `).run();
+      return true;
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
    * Renames the collection
    * @param newName New name for the collection
    */
-  rename(newName: string): Promise<void> {
-    return this._knex.schema.renameTable(this._name, newName);
+  rename(newName: string): boolean {
+    try {
+      this._database.prepare(`
+        ALTER TABLE ${this._name}
+        RENAME TO ${newName};
+      `).run();
+      return true;
+    } catch (error) {
+      throw error;
+    }
   }
 
   private newDocument(document: T): Document<T> {

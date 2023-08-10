@@ -1,10 +1,11 @@
-import knex from 'knex';
 import RegexParser from 'regex-parser';
 import { Collection } from './collection';
+import Database, { Database as DatabaseConstructor } from 'better-sqlite3';
+import { DatabaseOptions } from '../types/database-options';
 
 export class Nebra {
 
-  private _knex: ReturnType<typeof knex>;
+  private _database: DatabaseConstructor;
 
   /**
    * Create a new Nebra instance
@@ -12,37 +13,24 @@ export class Nebra {
    * If :memory: is used, the database will be stored in memory and will not be persistent
    * This path is passed directly to the Knex instance and it uses the better-sqlite3 driver
    */
-  constructor(path: string) {
-    this._knex = knex({
-      client: 'better-sqlite3',
-      connection: {
-        filename: path
-      },
-      useNullAsDefault: true,
-      pool: {
-        afterCreate: (conn: any, done: any) => {
-          conn.function('regexp', { deterministic: true }, (regex: string, text: string) => {
-            return RegexParser(regex).test(text) ? 1 : 0;
-          });
-          conn.function('from_array', { deterministic: true }, (array: string) => {
-            return JSON.parse(array);
-          });
-          done(null, conn);
-        }
-      }
+  constructor(path: string, options: DatabaseOptions = {}) {
+    this._database = new Database(path, options);
+    this._database.function('regexp', { deterministic: true }, (regex: unknown, text: unknown) => {
+      return RegexParser(regex as string).test(text as string) ? 1 : 0;
     });
   }
 
   /**
    * Authenticate to the database
    * Used to check if the database is accessible and working
-   * @returns {Promise<boolean>} True if authenticated
+   * @returns {boolean} True if authenticated
    * @throws {Error} If authentication fails
    * @example
   */
-  async authenticate() {
+  authenticate(): boolean {
     try {
-      await this._knex.raw('SELECT 1 + 1 AS result');
+      //await this._knex.raw('SELECT 1 + 1 AS result');
+      this._database.exec('SELECT 1 + 1 AS result');
       return true;
     } catch (error) {
       throw error;
@@ -50,21 +38,26 @@ export class Nebra {
   }
 
   /**
+   * Get the underlying better-sqlite3 instance for direct interaction
+   * @returns {DatabaseConstructor} The sqlite3 instance
+   */
+  connection(): DatabaseConstructor {
+    return this._database;
+  }
+
+  /**
    * Access a collection or create it if it doesn't exist
    * @param name Collection name
    * @returns Collection instance
    */
-  async collection<T = Record<any, any>>(name: string): Promise<Collection<T>> {
+  collection<T = Record<any, any>>(name: string): Collection<T> {
     try {
-      const exists = await this._knex.schema.hasTable(name);
+      const exists = this._database.prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name='${name}';`).get();
       if (exists) {
-        return new Collection<T>(this._knex, name);
+        return new Collection<T>(this._database, name);
       } else {
-        await this._knex.schema.createTable(name, (table) => {
-          table.string('id').primary();
-          table.json('data');
-        });
-        return new Collection<T>(this._knex, name);
+        this._database.exec(`CREATE TABLE ${name} (id TEXT PRIMARY KEY, data JSON);`);
+        return new Collection<T>(this._database, name);
       }
     } catch (error) {
       throw error;
@@ -72,24 +65,16 @@ export class Nebra {
   }
 
   /**
-   * Access the Knex instance directly
-   * (Caution: You can break things with this, use at your own risk)
-   * Can be used for migrations, etc.
-   * @returns {ReturnType<typeof knex>} Knex instance
-   */
-  knex(): ReturnType<typeof knex> {
-    return this._knex;
-  }
-
-  /**
    * Close the database connection
    * Once closed, the database cannot be accessed anymore until a new Nebra instance is created
-   * @returns {Promise<void>}
+   * @returns {boolean}
    * @throws {Error} If closing the connection fails
    */
-  async close(): Promise<void> {
+  close(): boolean {
     try {
-      await this._knex.destroy();
+      //await this._knex.destroy();
+      this._database.close();
+      return true;
     } catch (error) {
       throw error;
     }

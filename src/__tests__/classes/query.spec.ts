@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { Nebra } from "../../classes/nebra";
 import { faker } from '@faker-js/faker';
 
-describe('Collection class', async () => {
+describe('Query class', async () => {
 
   // Create a test database
   const nebra = new Nebra(':memory:');
@@ -136,9 +136,9 @@ describe('Collection class', async () => {
     expect(result[0].username).not.toBe(usernames[0]);
   });
 
-  it('Should find with fullText', async () => {
+  it('Should find with like', async () => {
     const query = Users.query()
-      .fullText('username', usernames[0]);
+      .like('username', usernames[0]);
     const result = await query.exec();
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
@@ -189,19 +189,15 @@ describe('Collection class', async () => {
   });
 
   it('Should return the first result', async () => {
-    const query = Users.query()
+    const result = Users.query()
       .first();
-    const result = await query.exec();
     expect(result).toBeDefined();
-    expect(result.length).toBe(1);
   });
 
   it('Should return the last result', async () => {
-    const query = Users.query()
+    const result = Users.query()
       .last();
-    const result = await query.exec();
     expect(result).toBeDefined();
-    expect(result.length).toBe(1);
   });
 
   it('Should sort the results (ascending)', async () => {

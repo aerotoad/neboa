@@ -8,7 +8,7 @@ describe('Collection class', () => {
 
   it('Should be able to create a new instance with required params', () => {
     const nebra = new Nebra(':memory:');
-    const collection = new Collection(nebra.knex(), 'test');
+    const collection = new Collection(nebra.connection(), 'test');
     expect(collection).toBeInstanceOf(Collection);
   });
 
@@ -22,13 +22,12 @@ describe('Collection class', () => {
     expect(inserted).toBeDefined();
     expectTypeOf(inserted).toMatchTypeOf<NebraDocument<any>>();
 
-    const knex = nebra.knex();
-    const result = await knex('test').where('id', inserted._id);
+    const db = nebra.connection();
+    const result = db.prepare('SELECT * FROM test WHERE id = ?').get(inserted._id) as any;
 
     expect(result).toBeDefined();
-    expect(result.length).toBe(1);
-    expect(result[0].id).toBe(inserted._id);
-    expect(JSON.parse(result[0].data).name).toBe('test');
+    expect(result.id).toBe(inserted._id);
+    expect(JSON.parse(result.data).name).toBe('test');
   });
 
   it('Should be able to insert many documents', async () => {
@@ -46,8 +45,8 @@ describe('Collection class', () => {
     expect(inserted).toBeDefined();
     expectTypeOf(inserted).toMatchTypeOf<NebraDocument<any>[]>();
 
-    const knex = nebra.knex();
-    const result = await knex('test');
+    const db = nebra.connection();
+    const result = db.prepare('SELECT * FROM test WHERE id IN (?, ?)').all(inserted.map((i: any) => i._id)) as any;
 
     expect(result).toBeDefined();
     expect(result.length).toBe(2);
@@ -75,14 +74,13 @@ describe('Collection class', () => {
     expect(updated).toBeDefined();
     expectTypeOf(updated).toMatchTypeOf<NebraDocument<any>>();
 
-    const knex = nebra.knex();
-    const result = await knex('test').where('id', inserted._id);
+    const db = nebra.connection();
+    const result = db.prepare('SELECT * FROM test WHERE id = ?').get(inserted._id) as any;
 
     expect(result).toBeDefined();
-    expect(result.length).toBe(1);
-    expect(result[0].id).toBe(inserted._id);
-    expect(JSON.parse(result[0].data).updatedAt).not.toBe(inserted.updatedAt);
-    expect(JSON.parse(result[0].data).name).toBe('test2');
+    expect(result.id).toBe(inserted._id);
+    expect(JSON.parse(result.data).updatedAt).not.toBe(inserted.updatedAt);
+    expect(JSON.parse(result.data).name).toBe('test2');
   });
 
   it('Should be able to update many documents', async () => {
@@ -117,8 +115,8 @@ describe('Collection class', () => {
     expect(updated).toBeDefined();
     expectTypeOf(updated).toMatchTypeOf<NebraDocument<any>[]>();
 
-    const knex = nebra.knex();
-    const result = await knex('test');
+    const db = nebra.connection();
+    const result = db.prepare('SELECT * FROM test WHERE id IN (?, ?)').all(inserted.map((i: any) => i._id)) as any;
 
     expect(result).toBeDefined();
     expect(result.length).toBe(2);
@@ -143,8 +141,8 @@ describe('Collection class', () => {
     expect(deleted).toBeDefined();
     expect(deleted).toBe(true);
 
-    const knex = nebra.knex();
-    const result = await knex('test').where('id', inserted._id);
+    const db = nebra.connection();
+    const result = db.prepare('SELECT * FROM test WHERE id = ?').all(inserted._id) as any;
 
     expect(result).toBeDefined();
     expect(result.length).toBe(0);
@@ -170,8 +168,8 @@ describe('Collection class', () => {
     expect(deleted).toBeDefined();
     expect(deleted).toBe(true);
 
-    const knex = nebra.knex();
-    const result = await knex('test');
+    const db = nebra.connection();
+    const result = db.prepare('SELECT * FROM test WHERE id IN (?, ?)').all(inserted.map((i: any) => i._id)) as any;
 
     expect(result).toBeDefined();
     expect(result.length).toBe(0);

@@ -2,7 +2,7 @@
   "name": "nebra",
   "type": "module",
   "version": "0.1.0",
-  "description": "Type-safe NoSQL with Node & SQLite powered by Knex.",
+  "description": "Type-safe NoSQL with Node & SQLite.",
   "author": "Samuel Bazaga",
   "license": "AGPL-3.0-or-later",
   "bugs": {
@@ -29,7 +29,10 @@
     "test:ui": "vitest watch --ui",
     "test:coverage": "vitest run --coverage",
     "release:test": "commit-and-tag-version",
-    "release:full": "npm run build && commit-and-tag-version && npm publish"
+    "release:full": "npm run build && commit-and-tag-version && npm publish",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "keywords": [
     "sqlite",
@@ -46,18 +49,19 @@
   ],
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",
+    "@types/better-sqlite3": "^7.6.4",
     "@vitest/coverage-v8": "^0.33.0",
     "@vitest/ui": "^0.33.0",
     "commit-and-tag-version": "^11.2.2",
     "tsup": "^7.1.0",
     "typescript": "^5.1.6",
     "vite": "^4.4.7",
+    "vitepress": "^1.0.0-rc.4",
     "vitest": "^0.33.0"
   },
   "dependencies": {
     "better-sqlite3": "^8.5.0",
     "bson-objectid": "^2.0.4",
-    "knex": "^2.5.1",
     "regex-parser": "^2.2.11"
   }
 }
