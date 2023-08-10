@@ -163,7 +163,7 @@ export class Query<T = any> {
   }
 
   // Search
-  fullText(field: string, value: string) {
+  like(field: string, value: string) {
     this._queryBuilder.where(`
       (SELECT 1 FROM JSON_EACH(data, '$.${field}') WHERE value LIKE '%${value}%')
     `);
