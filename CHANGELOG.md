@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.2.0](https://github.com/aerotoad/nebra/compare/v0.1.0...v0.2.0) (2023-08-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* `first()` and `last()` no longer work as chainable constraints, they now resolve the query like `exec()` with their constraint applied
+* `fullText` query constraint has been renamed as `like`
+* Knex has been removed as a dependency. The `.knex()` method has been replaced with `.connection()` which now returns the underlying better-sqlite3 instance.
+
+* Change functionality of first and last ([7713af3](https://github.com/aerotoad/nebra/commit/7713af31bf9a0936b3e5fc9796c28cda4e2124fc))
+* Remove knex ([140cf4b](https://github.com/aerotoad/nebra/commit/140cf4b4116cf3a785691cccd2ae65e078fab16a))
+* Rename `fullText` as `like` ([3d64ba6](https://github.com/aerotoad/nebra/commit/3d64ba6056228be2eca7c3f68d549d5c088a4467))
+
+
+### Features
+
+* Allow nebra factory to receive database options ([b417cdd](https://github.com/aerotoad/nebra/commit/b417cddf37e6241dfb86e81cb64ec7070afbc4eb))
+
 ## [0.1.0](https://github.com/aerotoad/nebra/compare/v0.0.4...v0.1.0) (2023-07-28)
 
 
