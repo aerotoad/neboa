@@ -14,3 +14,14 @@
 html.dark .footer-year {
   color: #e2e2e2;
 }
+
+.image-bg {
+  transition-property: all;
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
