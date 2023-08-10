@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.2.1](https://github.com/aerotoad/nebra/compare/v0.2.0...v0.2.1) (2023-08-10)
+
+
+### Bug Fixes
+
+* Make options optional ([775cb8d](https://github.com/aerotoad/nebra/commit/775cb8d9d0af68b689a08757d7e0c6f3a844932a))
+
 ## [0.2.0](https://github.com/aerotoad/nebra/compare/v0.1.0...v0.2.0) (2023-08-10)
 
 
