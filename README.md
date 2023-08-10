@@ -69,6 +69,25 @@ If you want to learn more about Nebra, you can read the [documentation](https://
 
 Happy hacking! :tada:
 
+## Documentation
+
+You can see the documentation on the [website](https://aerotoad.github.io/nebra/). 
+<br/>
+Below you can find table of contents with useful links to the documentation.
+
+#### Introduction
+- [What is Nebra](https://aerotoad.github.io/nebra/guide/what-is-nebra)
+- [Gettting Started](https://aerotoad.github.io/nebra/guide/getting-started)
+
+#### Basic Usage
+- [Connecting to a Database](https://aerotoad.github.io/nebra/guide/basic/connecting-a-database)
+- [Working with collections](https://aerotoad.github.io/nebra/guide/basic/working-with-collections)
+
+#### Queries
+- [Creating Queries](https://aerotoad.github.io/nebra/guide/queries/creating-queries)
+- [Query constraints](https://aerotoad.github.io/nebra/guide/queries/query-constraints)
+- [Relational Data](https://aerotoad.github.io/nebra/guide/queries/relational-data)
+
 ## Contributing
 
 Thanks for your interest in contributing! Please, read on the guidelines for [contributing](CONTRIBUTING.md) and then check the [issues](https://github.com/aerotoad/nebra/issues) to see if there's anything you can help with.
