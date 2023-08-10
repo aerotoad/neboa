@@ -29,7 +29,10 @@
     "test:ui": "vitest watch --ui",
     "test:coverage": "vitest run --coverage",
     "release:test": "commit-and-tag-version",
-    "release:full": "npm run build && commit-and-tag-version && npm publish"
+    "release:full": "npm run build && commit-and-tag-version && npm publish",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "keywords": [
     "sqlite",
@@ -53,6 +56,7 @@
     "tsup": "^7.1.0",
     "typescript": "^5.1.6",
     "vite": "^4.4.7",
+    "vitepress": "^1.0.0-rc.4",
     "vitest": "^0.33.0"
   },
   "dependencies": {
