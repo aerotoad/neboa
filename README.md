@@ -35,46 +35,6 @@ Under the hood, Nebra makes use of [better-sqlite3](https://github.com/WiseLibs/
 
 ## Getting Started
 
-### Installation
-
-To get started with Nebra, you can install it via npm. Open your terminal or command prompt and run the following command:
-
-```bash
-npm install nebra
-```
-
-### Example usage
-
-Now that you have Nebra installed, you can start using it to manage your data with ease. Below is a basic example of how to set up and interact with the database using Nebra:
-
-```typescript
-import { nebra } from 'nebra'; // Or const {nebra} = require('nebra') for CommonJs
-
-// Create a new Nebra instance and initialize the database
-const db = await nebra('path/to/database.db'); // Or :memory: for in-memory sqlite
-
-// Add a collection to the tabase
-const Users = await db.collection('users');
-
-// Insert a new json document to the collection
-const user = await Users.insert({
-  name: 'Darth Vader',
-  email: 'i_am_your_father@deathstar.net',
-});
-
-// Create a new query for the collection
-const query = Users.query();
-// Add constraints
-query.equalTo('name', 'Darth Vader');
-// Execute the query
-const results = await query.exec();
-console.log(results[0]); // { name: 'Darth Vader', email: 'i_am_your_father@deathstar.net'}
-```
-
-This example demonstrates how to create a new Nebra instance, create a new collection and perform basic insert and query operations.
-
-## Documentation
-
 It's recommended to read the [documentation](https://aerotoad.github.io/nebra/) to learn more about Nebra and how to use it.
 
 If you want to jump right in, you can install Nebra in your project and start using folliwing the steps below:
