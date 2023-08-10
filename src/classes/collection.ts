@@ -1,7 +1,6 @@
 import ObjectID from 'bson-objectid';
 import { Query } from './query';
 import { Document } from '../types/document';
-import assert from 'node:assert';
 import { Database } from 'better-sqlite3';
 
 export class Collection<T = {}> {

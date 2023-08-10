@@ -3,6 +3,7 @@ import { LookupOptions } from "../types/lookup-options";
 import { formatValue } from "../functions/format-value";
 import { Database } from "better-sqlite3";
 import { QueryBuilder } from "./query-builder";
+import { Document } from '../types/document';
 
 export class Query<T = any> {
 
@@ -156,15 +157,6 @@ export class Query<T = any> {
     this._queryBuilder.skip(skip);
     return this;
   }
-  first() {
-    this._queryBuilder.limit(1);
-    return this;
-  }
-  last() {
-    //this._queryBuilder.orderBy('id', 'desc').limit(1);
-    this._queryBuilder.sort('id', 'desc').limit(1);
-    return this;
-  }
 
   // Sorting operators
   ascending(field: string) {
@@ -176,11 +168,23 @@ export class Query<T = any> {
     return this;
   }
 
+  // Executes the query and returns the first document
+  first(): Document<T> {
+    this._queryBuilder.limit(1);
+    return this.exec()[0];
+  }
+
+  // Executes the query and returns the last document
+  last() {
+    this._queryBuilder.sort('id', 'desc').limit(1);
+    return this.exec()[0];
+  }
+
   /**
    * Exec method
-   * Executes the query and returns the documents
+   * Executes the query and returns the documents as an array
    */
-  exec(): Array<T> {
+  exec(): Array<Document<T>> {
     try {
       // Get the docs
       const documents = this._queryBuilder.statement().all().map((doc: any) => {
