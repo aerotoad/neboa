@@ -1,6 +1,13 @@
 
 # Getting Started
 
+Starting using Nebra is very simple, and this guide will walk you through the process of installing it and the basics of its usage.
+
+<div class="tip custom-block" style="padding-top: 8px">
+This guide assumes you are running Nebra in a <b>Node.js environment</b>.<br> 
+Nebra is not meant to be used in a browser, and it will not work in one.
+</div>
+
 ## Installation
 
 ### Prerequisites
