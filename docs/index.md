@@ -11,11 +11,11 @@ hero:
     alt: Nebra
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Get started
+      link: /guide/what-is-nebra
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: View on GitHub
+      link: https://github.com/aerotoad/nebra
 
 features:
   - icon: ✨

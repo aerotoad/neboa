@@ -27,6 +27,22 @@ Yes, Nebra is written in TypeScript and has full support for it, we encourage yo
 
 ### Does Nebra support relational data?
 Yes, Nebra has support for relational data, you can read more about it [here](./guide/relational-data).
+Nevertheless, relational queries do take a performance hit and are not the main strength of Nebra or NoSQL databases in general.
+If you're looking for a heavy focus on relational data, you should look into other full-blown DBMS.
+
+### What is SQLite?
+SQLite is a relational database management system (RDBMS) that is embedded into the end program. It is a self-contained, serverless, zero-configuration, transactional SQL database engine. SQLite is the most used database engine in the world.
+
+### What types of data can I store with Nebra?
+Everything that can be serialized to and from JSON, which is basically everything. You can store strings, numbers, booleans, arrays, objects, dates, buffers, etc.
+Bear in mind that complex data types like dates and buffers are stored as strings, so you won't be able to query them. \
+Data is serialized with `JSON.stringify` before being stored and deserialized with `JSON.parse` when being retrieved.
+
+### Does Nebra support encryption?
+No, Nebra does not support encryption and it's not within the scope of the project for now.
+
+### Does Nebra support multiple machines?
+No, Nebra does not support multiple machines and it's not within the scope of the project for now.
 
 ### Does it scale?
 On a single machine, yes. SQLite is a great choice for small to medium sized projects, but it does not scale horizontally. 

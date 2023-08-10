@@ -7,3 +7,10 @@
   );
   --vp-home-hero-image-filter: blur(72px);
 }
+
+.footer-year {
+  color: #2b2b2b;
+}
+html.dark .footer-year {
+  color: #e2e2e2;
+}
