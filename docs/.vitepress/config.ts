@@ -7,6 +7,7 @@ export default async function () {
   const nebraLatestRelease = await getRelease() as any;
 
   return defineConfig({
+    base: '/nebra/', // for GitHub Pages
     title: "Nebra",
     description: "Type-safe NoSQL with Node & SQLite.",
     appearance: 'dark',
