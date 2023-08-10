@@ -26,7 +26,7 @@ Nebra is ideal for:
 Yes, Nebra is written in TypeScript and has full support for it, we encourage you to use TypeScript with Nebra.
 
 ### Does Nebra support relational data?
-Yes, Nebra has support for relational data, you can read more about it [here](./guide/relational-data).
+Yes, Nebra has support for relational data, you can read more about it [here](./queries/relational-data.md).
 Nevertheless, relational queries do take a performance hit and are not the main strength of Nebra or NoSQL databases in general.
 If you're looking for a heavy focus on relational data, you should look into other full-blown DBMS.
 

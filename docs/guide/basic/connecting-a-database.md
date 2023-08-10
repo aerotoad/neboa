@@ -74,4 +74,4 @@ You will have to create a new instance of Nebra to connect to the database again
 :::
 
 Once you have your database instance ready, you can start working with collections. \
-Head over to the [Collections](/guide/working-with-collections) section to learn more.
+Head over to the [Collections](/guide/basic/working-with-collections) section to learn more.

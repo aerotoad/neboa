@@ -172,7 +172,7 @@ Users.delete(user._id)
 ## Querying documents
 
 To query documents, you need to create a query instance on the collection. Queries are chainable and there are many methods available to build the query. \
-Head over to the [Query](/guide/creating-queries) section to learn more about querying documents.
+Head over to the [Query](/guide/queries/creating-queries) section to learn more about querying documents.
 
 
 
