@@ -73,7 +73,7 @@ const posts = Posts.query()
     foreignField: '_id',
     as: 'author'
   })
-  .exec()
+  .find()
 ```
 This will return an array of posts, where each post will have an `author` field populated with the user document.
 
@@ -104,7 +104,7 @@ const users = Users.query()
     },  
     limit: 10,          // Only return the first 10 posts
   })
-  .exec()
+  .find()
 ```
 
 This will return an array of users, where each user will have a `posts` field populated with the list of posts.

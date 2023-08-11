@@ -76,7 +76,7 @@ Users.insert({ name: 'John Doe' }) // Error ❌ - missing age
 
 const query = Users.query()
 query.equalTo('name', 'John Doe')
-const user = query.exec(); // user is of type Document<User>
+const user = query.find(); // user is of type Document<User>
 ```
 
 Documents retrieved from the database will be of type `Document<T>`, where `T` is the type of the collection. \

@@ -24,7 +24,7 @@ After creating the query instance, you can chain methods to build your query bef
 const query = Users.query()
   .equalTo('name', 'John Doe')
 
-const result = query.exec()
+const result = query.find()
 ```
 Creating queries this way also allows you reuse the query instance, which can be useful in some cases.
 
@@ -32,15 +32,15 @@ Creating queries this way also allows you reuse the query instance, which can be
 
 To execute a query, there are multiple methods available on the query instance, depending on the type of result you want to get.
 
-### `exec`
+### `find`
 
-The `exec` method is the main way of executing a query. It will return an array of documents that match the query following exactly every constraint you set.
+The `find` method is the main way of executing a query. It will return an array of documents that match the query following exactly every constraint you set.
 
 ```ts
 const query = Users.query()
   .equalTo('name', 'John Doe')
 
-const result = query.exec() // [ { _id: '...', name: 'John Doe' } ]
+const result = query.find() // [ { _id: '...', name: 'John Doe' } ]
 ```
 
 ### `first`

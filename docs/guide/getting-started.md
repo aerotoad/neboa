@@ -77,7 +77,7 @@ Users.insert({ name: 'John Doe', age: 42 }) // Insert a document
 const query = Users.query() // Create a query
   .equalTo('name', 'John Doe') // Add constraints
   .limit(1) // Limit the results to 1
-const user = query.exec(); // Execute the query
+const user = query.find(); // Execute the query
 console.log(user) // { name: 'John Doe', age: 42 }
 ```
 
