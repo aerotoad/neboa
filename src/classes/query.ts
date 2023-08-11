@@ -21,7 +21,7 @@ export class Query<T = any> {
   /**
    * Chainable query constraint methods
    * All methods return the query instance to allow chaining
-   * All methods are chainable except for exec()
+   * All methods are chainable except for find(), count(), first() and last()
    * All methods use raw json_extract or .withJsonPath() to query json in the data column of the table
    */
 

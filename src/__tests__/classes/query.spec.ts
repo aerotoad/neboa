@@ -19,7 +19,7 @@ describe('Query class', async () => {
   it('Should find with equalTo', async () => {
     const query = Users.query()
       .equalTo('username', usernames[0]);
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
     expect(result[0].username).toBe(usernames[0]);
@@ -28,7 +28,7 @@ describe('Query class', async () => {
   it('Should find with notEqualTo', async () => {
     const query = Users.query()
       .notEqualTo('username', usernames[0]);
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
     expect(result.length).toBe(49);
     expect(result[0].username).not.toBe(usernames[0]);
@@ -37,7 +37,7 @@ describe('Query class', async () => {
   it('Should find with greaterThan', async () => {
     const query = Users.query()
       .greaterThan('age', 50);
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
 
     // Check that all users are older than 50
@@ -47,7 +47,7 @@ describe('Query class', async () => {
   it('Should find with greaterThanOrEqualTo', async () => {
     const query = Users.query()
       .greaterThanOrEqualTo('age', 50);
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
 
     // Check that all users are older than or equal to 50
@@ -57,7 +57,7 @@ describe('Query class', async () => {
   it('Should find with lessThan', async () => {
     const query = Users.query()
       .lessThan('age', 50);
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
 
     // Check that all users are younger than 50
@@ -67,7 +67,7 @@ describe('Query class', async () => {
   it('Should find with lessThanOrEqualTo', async () => {
     const query = Users.query()
       .lessThanOrEqualTo('age', 50);
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
 
     // Check that all users are younger than or equal to 50
@@ -77,7 +77,7 @@ describe('Query class', async () => {
   it('Should find with containedIn', async () => {
     const query = Users.query()
       .containedIn('username', usernames.slice(0, 10));
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
     expect(result.length).toBe(10);
     expect(result.every(user => usernames.slice(0, 10).includes(user.username))).toBe(true);
@@ -86,7 +86,7 @@ describe('Query class', async () => {
   it('Should find with notContainedIn', async () => {
     const query = Users.query()
       .notContainedIn('username', usernames.slice(0, 10));
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
     expect(result.length).toBe(40);
     expect(result.every(user => !usernames.slice(0, 10).includes(user.username))).toBe(true);
@@ -95,7 +95,7 @@ describe('Query class', async () => {
   it('Should find with exists', async () => {
     const query = Users.query()
       .exists('carId');
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
     expect(result.length).toBe(25);
     expect(result.every(user => user.carId !== null)).toBe(true);
@@ -104,7 +104,7 @@ describe('Query class', async () => {
   it('Should find with notExists', async () => {
     const query = Users.query()
       .notExists('carId');
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
     expect(result.length).toBe(25);
     expect(result.every(user => user.carId === null)).toBe(true);
@@ -117,7 +117,7 @@ describe('Query class', async () => {
     const regex = new RegExp(`^${usernames[0]}$`, 'i');
     query.matches('username', regex);
 
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
     expect(result[0].username).toBe(usernames[0]);
@@ -130,7 +130,7 @@ describe('Query class', async () => {
     const regex = new RegExp(`^${usernames[0]}$`, 'i');
     query.doesNotMatch('username', regex);
 
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
     expect(result.length).toBe(49);
     expect(result[0].username).not.toBe(usernames[0]);
@@ -139,7 +139,7 @@ describe('Query class', async () => {
   it('Should find with like', async () => {
     const query = Users.query()
       .like('username', usernames[0]);
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
     expect(result[0].username).toBe(usernames[0]);
@@ -154,7 +154,7 @@ describe('Query class', async () => {
         as: 'posts'
       });
 
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
     expect(result.length).toBe(50);
     expect(result[0].posts.length).toBe(5);
@@ -166,7 +166,7 @@ describe('Query class', async () => {
   it('Should limit the results', async () => {
     const query = Users.query()
       .limit(10);
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
     expect(result.length).toBe(10);
   });
@@ -174,11 +174,11 @@ describe('Query class', async () => {
   it('Should skip the results', async () => {
     const query1 = Users.query()
       .limit(10);
-    const result1 = await query1.exec();
+    const result1 = query1.find();
 
     const query2 = Users.query()
       .skip(10);
-    const result2 = await query2.exec();
+    const result2 = query2.find();
 
     expect(result1).toBeDefined();
     expect(result2).toBeDefined();
@@ -203,7 +203,7 @@ describe('Query class', async () => {
   it('Should sort the results (ascending)', async () => {
     const query = Users.query()
       .ascending('age');
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
     expect(result.length).toBe(50);
     expect(result.every((user: any, index: number) => index === 0 || user.age >= result[index - 1].age)).toBe(true);
@@ -212,7 +212,7 @@ describe('Query class', async () => {
   it('Should sort the results (descending)', async () => {
     const query = Users.query()
       .descending('age');
-    const result = await query.exec();
+    const result = query.find();
     expect(result).toBeDefined();
     expect(result.length).toBe(50);
     expect(result.every((user: any, index: number) => index === 0 || user.age <= result[index - 1].age)).toBe(true);
