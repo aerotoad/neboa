@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.3.0](https://github.com/aerotoad/nebra/compare/v0.2.1...v0.3.0) (2023-08-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* **query:** `query.exec()` has been replaced by `query.find()`
+
+* **query:** `exec()` renamed as `find()` ([6ea504d](https://github.com/aerotoad/nebra/commit/6ea504da15b47929fbeefc010221402575be2b36))
+
 ## [0.2.1](https://github.com/aerotoad/nebra/compare/v0.2.0...v0.2.1) (2023-08-10)
 
 
