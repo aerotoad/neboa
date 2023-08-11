@@ -11,10 +11,12 @@ export class Nebra {
    * Create a new Nebra instance
    * @param path Path to the database file (e.g. `:memory:` or `./database.db`)
    * If :memory: is used, the database will be stored in memory and will not be persistent
-   * This path is passed directly to the Knex instance and it uses the better-sqlite3 driver
+   * This path is passed directly to the better-sqlite3 constructor
    */
   constructor(path: string, options: DatabaseOptions = {}) {
     this._database = new Database(path, options);
+
+    // Add REGEXP function (SQLite doesn't have it by default)
     this._database.function('regexp', { deterministic: true }, (regex: unknown, text: unknown) => {
       return RegexParser(regex as string).test(text as string) ? 1 : 0;
     });
@@ -29,7 +31,6 @@ export class Nebra {
   */
   authenticate(): boolean {
     try {
-      //await this._knex.raw('SELECT 1 + 1 AS result');
       this._database.exec('SELECT 1 + 1 AS result');
       return true;
     } catch (error) {

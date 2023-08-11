@@ -171,20 +171,20 @@ export class Query<T = any> {
   // Executes the query and returns the first document
   first(): Document<T> {
     this._queryBuilder.limit(1);
-    return this.exec()[0];
+    return this.find()[0];
   }
 
   // Executes the query and returns the last document
   last() {
     this._queryBuilder.sort('id', 'desc').limit(1);
-    return this.exec()[0];
+    return this.find()[0];
   }
 
   /**
-   * Exec method
+   * Find method
    * Executes the query and returns the documents as an array
    */
-  exec(): Array<Document<T>> {
+  find(): Array<Document<T>> {
     try {
       // Get the docs
       const documents = this._queryBuilder.statement().all().map((doc: any) => {
@@ -204,11 +204,11 @@ export class Query<T = any> {
                 lookupQuery.ascending(field);
               });
             }
-            const result = lookupQuery.exec();
+            const result = lookupQuery.find();
             parsedDocument[as] = result;
           } else {
             lookupQuery.equalTo(foreignField, parsedDocument[localField]);
-            const result = lookupQuery.exec();
+            const result = lookupQuery.find();
             parsedDocument[as] = result;
           }
         }
