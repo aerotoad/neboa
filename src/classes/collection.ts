@@ -69,15 +69,9 @@ export class Collection<T = {}> {
   update(objectId: string, document: T): Document<T> {
 
     try {
-      const updatedDocument = {
-        updatedAt: new Date().toISOString(),
-        ...document,
-        _id: objectId,
-      };
-
       const result = this._database.prepare(`
         UPDATE ${this._name}
-        SET data = '${JSON.stringify(updatedDocument)}'
+        SET data = '${JSON.stringify(document)}'
         WHERE id = '${objectId}'
         RETURNING *;
       `).get() as any;
@@ -97,10 +91,6 @@ export class Collection<T = {}> {
    */
   updateMany(objectIds: string[], documents: Document<T>[]): Document<T>[] {
     try {
-      const newDocuments = documents.map(document => {
-        document.updatedAt = new Date().toISOString();
-        return document;
-      });
 
       let updatedDocuments: Document<T>[] = [];
 
@@ -111,7 +101,7 @@ export class Collection<T = {}> {
           WHERE id = ?
           RETURNING *;
         `);
-        for (const [index, document] of newDocuments.entries()) {
+        for (const [index, document] of documents.entries()) {
           const result = stmt.get(JSON.stringify(document), objectIds[index]) as any;
           updatedDocuments.push(JSON.parse(result.data));
         }
@@ -203,8 +193,6 @@ export class Collection<T = {}> {
     return {
       ...document,
       _id: ObjectID().toHexString(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
     } as Document<T>;
   }
 
