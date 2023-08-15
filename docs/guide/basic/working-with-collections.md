@@ -80,7 +80,7 @@ const user = query.find(); // user is of type Document<User>
 ```
 
 Documents retrieved from the database will be of type `Document<T>`, where `T` is the type of the collection. \
-This type is just wrapper type around the document, which adds the timestamps and the `_id` field to the document.
+This type is just wrapper type around the document, which adds the `_id` field to the document.
 
 This is how the `Document<T>` type is defined:
 
@@ -92,8 +92,6 @@ interface User {
 
 type Document<T> = T & {
   _id: string
-  createdAt: string
-  updatedAt: string
 }
 
 // This results in the following type:
@@ -101,10 +99,12 @@ type Document<T> = T & {
   name: string
   age: number
   _id: string
-  createdAt: string
-  updatedAt: string
 }
 ```
+
+As you can see, an `_id` field is added to the document. This is an [ObjectID](https://www.mongodb.com/docs/manual/reference/bson-types/#std-label-objectid) string created by Nebra using the
+[BSON ObjectID](https://github.com/cabinjs/bson-objectid) library. You must not set the `_id` field yourself, as it will be overwritten by Nebra.
+All the tables created in the database will use this ObjectID string as the primary key and you can use it to query documents.
 
 ## Updating documents
 
