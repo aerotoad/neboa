@@ -57,7 +57,12 @@ export class Nebra {
       if (exists) {
         return new Collection<T>(this._database, name);
       } else {
+        // Create the collection
         this._database.exec(`CREATE TABLE ${name} (id TEXT PRIMARY KEY, data JSON);`);
+
+        // Create an unique index on the _id field of the data for faster access (if it doesn't exist)
+        this._database.exec(`CREATE UNIQUE INDEX IF NOT EXISTS ${name}_id ON ${name} (json_extract(data, '$._id'));`);
+
         return new Collection<T>(this._database, name);
       }
     } catch (error) {
