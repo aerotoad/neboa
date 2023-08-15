@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.4.0](https://github.com/aerotoad/nebra/compare/v0.3.0...v0.4.0) (2023-08-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* Documents no longer autogenerate `createdAt` `updatedAt` timestamps.
+
+* Documents no longer autogenerate timestamps ([30b14ab](https://github.com/aerotoad/nebra/commit/30b14ab6dab512f4d3b7664399cb69c5c90dfc7b))
+
+
+### Features
+
+* Add index to json `_id` field ([a800b73](https://github.com/aerotoad/nebra/commit/a800b73233769bd670e04e0af5bbdd1f71432251))
+
 ## [0.3.0](https://github.com/aerotoad/nebra/compare/v0.2.1...v0.3.0) (2023-08-11)
 
 
