@@ -58,7 +58,8 @@ describe('Collection class', () => {
     const nebra = new Nebra(':memory:');
     const collection = await nebra.collection('test');
     const inserted = await collection.insert({
-      name: 'test'
+      name: 'test',
+      updatedAt: new Date().toISOString()
     });
 
     expect(inserted).toBeDefined();
@@ -68,7 +69,8 @@ describe('Collection class', () => {
     await new Promise(resolve => setTimeout(resolve, 100));
 
     const updated = await collection.update(inserted._id, {
-      name: 'test2'
+      name: 'test2',
+      updatedAt: new Date().toISOString()
     });
 
     expect(updated).toBeDefined();
@@ -88,10 +90,12 @@ describe('Collection class', () => {
     const collection = await nebra.collection('test');
     const inserted = await collection.insertMany([
       {
-        name: 'test'
+        name: 'test',
+        updatedAt: new Date().toISOString()
       },
       {
-        name: 'test2'
+        name: 'test2',
+        updatedAt: new Date().toISOString()
       }
     ]);
 
@@ -104,11 +108,13 @@ describe('Collection class', () => {
     const updated = await collection.updateMany([inserted[0]._id, inserted[1]._id], [
       {
         ...inserted[0],
-        name: 'test3'
+        name: 'test3',
+        updatedAt: new Date().toISOString()
       },
       {
         ...inserted[1],
-        name: 'test4'
+        name: 'test4',
+        updatedAt: new Date().toISOString()
       }
     ]);
 
