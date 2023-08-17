@@ -83,6 +83,14 @@ describe('Collection class', () => {
     expect(result.id).toBe(inserted._id);
     expect(JSON.parse(result.data).updatedAt).not.toBe(inserted.updatedAt);
     expect(JSON.parse(result.data).name).toBe('test2');
+
+    // Query the collection to ensure the data is correctly updated
+    const query = collection.query()
+      .equalTo('_id', inserted._id)
+      .first();
+
+    expect(query).toBeDefined();
+    expect(query._id).toBe(inserted._id);
   });
 
   it('Should be able to update many documents', async () => {
@@ -107,12 +115,10 @@ describe('Collection class', () => {
 
     const updated = await collection.updateMany([inserted[0]._id, inserted[1]._id], [
       {
-        ...inserted[0],
         name: 'test3',
         updatedAt: new Date().toISOString()
       },
       {
-        ...inserted[1],
         name: 'test4',
         updatedAt: new Date().toISOString()
       }
@@ -130,6 +136,17 @@ describe('Collection class', () => {
     expect(JSON.parse(result[1].data).updatedAt).not.toBe(inserted[1].updatedAt);
     expect(JSON.parse(result[0].data).name).toBe('test3');
     expect(JSON.parse(result[1].data).name).toBe('test4');
+
+    // Query the collection to ensure the data is correctly updated
+    const query = collection.query()
+      .containedIn('_id', [inserted[0]._id, inserted[1]._id])
+      .find();
+
+    expect(query).toBeDefined();
+    expect(query[0]).toBeDefined();
+    expect(query[1]).toBeDefined();
+    expect(query[0]._id).toBe(inserted[0]._id);
+    expect(query[1]._id).toBe(inserted[1]._id);
   });
 
   it('Should be able to delete a document', async () => {

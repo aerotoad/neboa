@@ -68,16 +68,21 @@ export class Collection<T = {}> {
    */
   update(objectId: string, document: T): Document<T> {
 
+    // Turn the recived document into a Document<T> object
+    const updatedDocument: Document<T> = {
+      ...document,
+      _id: objectId
+    }
+
     try {
       const result = this._database.prepare(`
         UPDATE ${this._name}
-        SET data = '${JSON.stringify(document)}'
+        SET data = '${JSON.stringify(updatedDocument)}'
         WHERE id = '${objectId}'
         RETURNING *;
       `).get() as any;
 
       return JSON.parse(result.data);
-      //return updatedDocument;
     } catch (error) {
       throw error;
     }
@@ -89,7 +94,7 @@ export class Collection<T = {}> {
    * @param documents Array of documents to update
    * @returns An array of updated documents
    */
-  updateMany(objectIds: string[], documents: Document<T>[]): Document<T>[] {
+  updateMany(objectIds: string[], documents: T[]): Document<T>[] {
     try {
 
       let updatedDocuments: Document<T>[] = [];
@@ -102,7 +107,15 @@ export class Collection<T = {}> {
           RETURNING *;
         `);
         for (const [index, document] of documents.entries()) {
-          const result = stmt.get(JSON.stringify(document), objectIds[index]) as any;
+
+          // Turn the recived document into a Document<T> object
+          const updatedDocument: Document<T> = {
+            ...document,
+            _id: objectIds[index]
+          }
+
+          // Run the update statement and push the result to the updatedDocuments array
+          const result = stmt.get(JSON.stringify(updatedDocument), objectIds[index]) as any;
           updatedDocuments.push(JSON.parse(result.data));
         }
       })
