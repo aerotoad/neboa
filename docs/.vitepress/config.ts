@@ -69,6 +69,14 @@ export default async function () {
             { text: 'Query constraints', link: '/guide/queries/query-constraints' },
             { text: 'Relational data', link: '/guide/queries/relational-data' },
           ]
+        },
+        {
+          text: 'Examples',
+          collapsed: false,
+          items: [
+            { text: 'Basic example', link: '/guide/examples/basic' },
+            { text: 'Zod example', link: '/guide/examples/zod' },
+          ]
         }
       ],
 
