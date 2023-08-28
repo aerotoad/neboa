@@ -1,9 +1,8 @@
-import { Collection } from "./collection";
 import { LookupOptions } from "../types/lookup-options";
 import { formatValue } from "../functions/format-value";
 import { Database } from "better-sqlite3";
 import { QueryBuilder } from "./query-builder";
-import { Document } from '../types/document';
+import { NeboaDocument } from '../types/neboa-document';
 
 export class Query<T = any> {
 
@@ -169,7 +168,7 @@ export class Query<T = any> {
   }
 
   // Executes the query and returns the first document
-  first(): Document<T> {
+  first(): NeboaDocument<T> {
     this._queryBuilder.limit(1);
     return this.find()[0];
   }
@@ -184,7 +183,7 @@ export class Query<T = any> {
    * Find method
    * Executes the query and returns the documents as an array
    */
-  find(): Array<Document<T>> {
+  find(): Array<NeboaDocument<T>> {
     try {
       // Get the docs
       const documents = this._queryBuilder.statement().all().map((doc: any) => {

@@ -1,6 +1,6 @@
 import ObjectID from 'bson-objectid';
 import { Query } from './query';
-import { Document } from '../types/document';
+import { NeboaDocument } from '../types/neboa-document';
 import { Database } from 'better-sqlite3';
 
 export class Collection<T = {}> {
@@ -23,7 +23,7 @@ export class Collection<T = {}> {
    * @param document Document to insert
    * @returns The inserted document
    */
-  insert(document: T): Document<T> {
+  insert(document: T): NeboaDocument<T> {
     try {
       const newDocument = this.newDocument(document);
       this._database.prepare(`
@@ -41,7 +41,7 @@ export class Collection<T = {}> {
    * @param documents Inserts multiple documents into the collection
    * @returns An array of inserted documents
    */
-  insertMany(documents: T[]): Document<T>[] {
+  insertMany(documents: T[]): NeboaDocument<T>[] {
     try {
       const newDocuments = documents.map(document => this.newDocument(document));
 
@@ -66,10 +66,10 @@ export class Collection<T = {}> {
    * @param document Document to update
    * @returns The updated document
    */
-  update(objectId: string, document: T): Document<T> {
+  update(objectId: string, document: T): NeboaDocument<T> {
 
     // Turn the recived document into a Document<T> object
-    const updatedDocument: Document<T> = {
+    const updatedDocument: NeboaDocument<T> = {
       ...document,
       _id: objectId
     }
@@ -94,10 +94,10 @@ export class Collection<T = {}> {
    * @param documents Array of documents to update
    * @returns An array of updated documents
    */
-  updateMany(objectIds: string[], documents: T[]): Document<T>[] {
+  updateMany(objectIds: string[], documents: T[]): NeboaDocument<T>[] {
     try {
 
-      let updatedDocuments: Document<T>[] = [];
+      let updatedDocuments: NeboaDocument<T>[] = [];
 
       const transaction = this._database.transaction(() => {
         const stmt = this._database.prepare(`
@@ -109,7 +109,7 @@ export class Collection<T = {}> {
         for (const [index, document] of documents.entries()) {
 
           // Turn the recived document into a Document<T> object
-          const updatedDocument: Document<T> = {
+          const updatedDocument: NeboaDocument<T> = {
             ...document,
             _id: objectIds[index]
           }
@@ -196,7 +196,7 @@ export class Collection<T = {}> {
     }
   }
 
-  private newDocument(document: T): Document<T> {
+  private newDocument(document: T): NeboaDocument<T> {
 
     if (typeof document !== 'object') throw new Error('Document must be an object');
     if (Array.isArray(document)) throw new Error('Document cannot be an array');
@@ -206,7 +206,7 @@ export class Collection<T = {}> {
     return {
       ...document,
       _id: ObjectID().toHexString(),
-    } as Document<T>;
+    } as NeboaDocument<T>;
   }
 
 }
