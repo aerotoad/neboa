@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { Nebra } from "../../classes/nebra";
+import { Neboa } from "../../classes/neboa";
 import { faker } from '@faker-js/faker';
 
 describe('Query class', async () => {
 
   // Create a test database
-  const nebra = new Nebra(':memory:');
-  const Users = await nebra.collection('users');
-  const Cars = await nebra.collection('cars');
-  const Posts = await nebra.collection('posts');
+  const neboa = new Neboa(':memory:');
+  const Users = await neboa.collection('users');
+  const Cars = await neboa.collection('cars');
+  const Posts = await neboa.collection('posts');
 
   const usernames: any[] = [];
 

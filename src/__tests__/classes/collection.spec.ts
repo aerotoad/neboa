@@ -1,28 +1,28 @@
 import { describe, it, expect, expectTypeOf } from 'vitest';
-import { Nebra } from '../../classes/nebra';
+import { Neboa } from '../../classes/neboa';
 import { Collection } from '../../classes/collection';
-import { Document as NebraDocument } from '../../types/document';
+import { NeboaDocument } from '../../types/neboa-document';
 import { Query } from '../../classes/query';
 
 describe('Collection class', () => {
 
   it('Should be able to create a new instance with required params', () => {
-    const nebra = new Nebra(':memory:');
-    const collection = new Collection(nebra.connection(), 'test');
+    const neboa = new Neboa(':memory:');
+    const collection = new Collection(neboa.connection(), 'test');
     expect(collection).toBeInstanceOf(Collection);
   });
 
   it('Should be able to insert a document', async () => {
-    const nebra = new Nebra(':memory:');
-    const collection = await nebra.collection('test');
+    const neboa = new Neboa(':memory:');
+    const collection = await neboa.collection('test');
     const inserted = await collection.insert({
       name: 'test'
     });
 
     expect(inserted).toBeDefined();
-    expectTypeOf(inserted).toMatchTypeOf<NebraDocument<any>>();
+    expectTypeOf(inserted).toMatchTypeOf<NeboaDocument<any>>();
 
-    const db = nebra.connection();
+    const db = neboa.connection();
     const result = db.prepare('SELECT * FROM test WHERE id = ?').get(inserted._id) as any;
 
     expect(result).toBeDefined();
@@ -31,8 +31,8 @@ describe('Collection class', () => {
   });
 
   it('Should be able to insert many documents', async () => {
-    const nebra = new Nebra(':memory:');
-    const collection = await nebra.collection('test');
+    const neboa = new Neboa(':memory:');
+    const collection = await neboa.collection('test');
     const inserted = await collection.insertMany([
       {
         name: 'test'
@@ -43,9 +43,9 @@ describe('Collection class', () => {
     ]);
 
     expect(inserted).toBeDefined();
-    expectTypeOf(inserted).toMatchTypeOf<NebraDocument<any>[]>();
+    expectTypeOf(inserted).toMatchTypeOf<NeboaDocument<any>[]>();
 
-    const db = nebra.connection();
+    const db = neboa.connection();
     const result = db.prepare('SELECT * FROM test WHERE id IN (?, ?)').all(inserted.map((i: any) => i._id)) as any;
 
     expect(result).toBeDefined();
@@ -55,15 +55,15 @@ describe('Collection class', () => {
   });
 
   it('Should be able to update a document', async () => {
-    const nebra = new Nebra(':memory:');
-    const collection = await nebra.collection('test');
+    const neboa = new Neboa(':memory:');
+    const collection = await neboa.collection('test');
     const inserted = await collection.insert({
       name: 'test',
       updatedAt: new Date().toISOString()
     });
 
     expect(inserted).toBeDefined();
-    expectTypeOf(inserted).toMatchTypeOf<NebraDocument<any>>();
+    expectTypeOf(inserted).toMatchTypeOf<NeboaDocument<any>>();
 
     // Wait 100ms to ensure updatedAt is different
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -74,9 +74,9 @@ describe('Collection class', () => {
     });
 
     expect(updated).toBeDefined();
-    expectTypeOf(updated).toMatchTypeOf<NebraDocument<any>>();
+    expectTypeOf(updated).toMatchTypeOf<NeboaDocument<any>>();
 
-    const db = nebra.connection();
+    const db = neboa.connection();
     const result = db.prepare('SELECT * FROM test WHERE id = ?').get(inserted._id) as any;
 
     expect(result).toBeDefined();
@@ -94,8 +94,8 @@ describe('Collection class', () => {
   });
 
   it('Should be able to update many documents', async () => {
-    const nebra = new Nebra(':memory:');
-    const collection = await nebra.collection('test');
+    const neboa = new Neboa(':memory:');
+    const collection = await neboa.collection('test');
     const inserted = await collection.insertMany([
       {
         name: 'test',
@@ -108,7 +108,7 @@ describe('Collection class', () => {
     ]);
 
     expect(inserted).toBeDefined();
-    expectTypeOf(inserted).toMatchTypeOf<NebraDocument<any>[]>();
+    expectTypeOf(inserted).toMatchTypeOf<NeboaDocument<any>[]>();
 
     // Wait 100ms to ensure updatedAt is different
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -125,9 +125,9 @@ describe('Collection class', () => {
     ]);
 
     expect(updated).toBeDefined();
-    expectTypeOf(updated).toMatchTypeOf<NebraDocument<any>[]>();
+    expectTypeOf(updated).toMatchTypeOf<NeboaDocument<any>[]>();
 
-    const db = nebra.connection();
+    const db = neboa.connection();
     const result = db.prepare('SELECT * FROM test WHERE id IN (?, ?)').all(inserted.map((i: any) => i._id)) as any;
 
     expect(result).toBeDefined();
@@ -150,21 +150,21 @@ describe('Collection class', () => {
   });
 
   it('Should be able to delete a document', async () => {
-    const nebra = new Nebra(':memory:');
-    const collection = await nebra.collection('test');
+    const neboa = new Neboa(':memory:');
+    const collection = await neboa.collection('test');
     const inserted = await collection.insert({
       name: 'test'
     });
 
     expect(inserted).toBeDefined();
-    expectTypeOf(inserted).toMatchTypeOf<NebraDocument<any>>();
+    expectTypeOf(inserted).toMatchTypeOf<NeboaDocument<any>>();
 
     const deleted = await collection.delete(inserted._id);
 
     expect(deleted).toBeDefined();
     expect(deleted).toBe(true);
 
-    const db = nebra.connection();
+    const db = neboa.connection();
     const result = db.prepare('SELECT * FROM test WHERE id = ?').all(inserted._id) as any;
 
     expect(result).toBeDefined();
@@ -172,8 +172,8 @@ describe('Collection class', () => {
   });
 
   it('Should be able to delete many documents', async () => {
-    const nebra = new Nebra(':memory:');
-    const collection = await nebra.collection('test');
+    const neboa = new Neboa(':memory:');
+    const collection = await neboa.collection('test');
     const inserted = await collection.insertMany([
       {
         name: 'test'
@@ -184,14 +184,14 @@ describe('Collection class', () => {
     ]);
 
     expect(inserted).toBeDefined();
-    expectTypeOf(inserted).toMatchTypeOf<NebraDocument<any>[]>();
+    expectTypeOf(inserted).toMatchTypeOf<NeboaDocument<any>[]>();
 
     const deleted = await collection.deleteMany(inserted.map((i: any) => i._id));
 
     expect(deleted).toBeDefined();
     expect(deleted).toBe(true);
 
-    const db = nebra.connection();
+    const db = neboa.connection();
     const result = db.prepare('SELECT * FROM test WHERE id IN (?, ?)').all(inserted.map((i: any) => i._id)) as any;
 
     expect(result).toBeDefined();
@@ -199,8 +199,8 @@ describe('Collection class', () => {
   });
 
   it('Should be able to start a new query', async () => {
-    const nebra = new Nebra(':memory:');
-    const collection = await nebra.collection('test');
+    const neboa = new Neboa(':memory:');
+    const collection = await neboa.collection('test');
     const query = collection.query();
     expect(query).toBeDefined();
     expect(query).toBeInstanceOf(Query);
