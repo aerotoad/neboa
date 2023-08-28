@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.5.0](https://github.com/aerotoad/neboa/compare/v0.4.1...v0.5.0) (2023-08-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* `Document<T>` has been renamed `NeboaDocument<T>` to avoid conflicts.
+* `nebra()` function has been renamed as `neboa()`
+
+* Change `Document` type for `NeboaDocument` ([3248d88](https://github.com/aerotoad/neboa/commit/3248d8846c58676b9efc1bef06d93086e549a1d7))
+* Rename project to Neboa ([36d9aea](https://github.com/aerotoad/neboa/commit/36d9aea3b8fc08a8c5e0c32244a6e5f2c1af3f42))
+
 ## [0.4.1](https://github.com/aerotoad/nebra/compare/v0.4.0...v0.4.1) (2023-08-17)
 
 
