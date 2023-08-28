@@ -8,7 +8,7 @@
     <img src="https://github.com/aerotoad/neboa/actions/workflows/ci.yml/badge.svg">
   </a>
   <a href="https://github.com/aerotoad/neboa/blob/main/LICENSE">
-    <img alt="License" src="https://img.shields.io/github/license/aerotoad/nebra">
+    <img alt="License" src="https://img.shields.io/github/license/aerotoad/neboa">
   </a>
   <img src="https://img.shields.io/badge/Project%20Status-Alpha-yellow?logo=git&amp;logoColor=white" style="max-width: 100%;">
   <a href="https://github.com/aerotoad/neboa/blob/main/CONTRIBUTING.md">
