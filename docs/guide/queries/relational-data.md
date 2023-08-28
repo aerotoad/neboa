@@ -1,7 +1,7 @@
 
 # Relational Data
 
-Relational data is a common requirement in many applications. Nebra provides a simple way to model and query relational data using lookups.
+Relational data is a common requirement in many applications. Neboa provides a simple way to model and query relational data using lookups.
 Lookups are a way to create nested queries that will be resolved when the parent query is executed and will populate the results with the resolved documents.
 
 ## Creating a relationship

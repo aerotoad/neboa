@@ -10,9 +10,9 @@ To create a query, you can use the `query` method on the collection instance. \
 This method will return a query instance, which is the base to build your query on.
 
 ```ts
-import { nebra } from 'nebra'
+import { neboa } from 'neboa'
 
-const db = nebra('database.db')
+const db = neboa('database.db')
 
 const Users = db.collection('users')
 

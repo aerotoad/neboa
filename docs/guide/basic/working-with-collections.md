@@ -1,10 +1,10 @@
 
 # Working with Collections
 
-Collections are the main way to structure and store data in Nebra. \
+Collections are the main way to structure and store data in Neboa. \
 Each collection is mapped to a table in the database, and each document is mapped to a row in that table.
 
-Nebra only stores serialized data, therefore you don't need to worry about creating and maintaining table schemas yourself. \
+Neboa only stores serialized data, therefore you don't need to worry about creating and maintaining table schemas yourself. \
 You can just insert and retrieve data as you please.
 
 ## Creating a collection
@@ -14,9 +14,9 @@ This method will accept the name of the collection as the argument and return a 
 If the collection doesn't exist in the database, it will be created automatically.
   
 ```ts
-import { nebra } from 'nebra'
+import { neboa } from 'neboa'
 
-const db = nebra('database.db')
+const db = neboa('database.db')
 
 const Users = db.collection('users')
 ```
@@ -27,9 +27,9 @@ To insert a document into a collection, you can use the `insert` method. \
 This method will accept the document as the argument and return the inserted document.
 
 ```ts
-import { nebra } from 'nebra'
+import { neboa } from 'neboa'
 
-const db = nebra('database.db')
+const db = neboa('database.db')
 
 const Users = db.collection('users')
 
@@ -42,9 +42,9 @@ To insert multiple documents into a collection, you can use the `insertMany` met
 It will accept an array of documents as the argument and return an array of the inserted documents.
 
 ```ts
-import { nebra } from 'nebra'
+import { neboa } from 'neboa'
 
-const db = nebra('database.db')
+const db = neboa('database.db')
 
 const Users = db.collection('users')
 
@@ -60,9 +60,9 @@ You can specify the type of the documents in the collection by passing a generic
 This will allow you to get type hints when working with documents in the collection.
 
 ```ts
-import { nebra } from 'nebra'
+import { neboa } from 'neboa'
 
-const db = nebra('database.db')
+const db = neboa('database.db')
 
 interface User {
   name: string
@@ -76,13 +76,13 @@ Users.insert({ name: 'John Doe' }) // Error ❌ - missing age
 
 const query = Users.query()
 query.equalTo('name', 'John Doe')
-const user = query.find(); // user is of type Document<User>
+const user = query.find(); // user is of type NeboaDocument<User>
 ```
 
-Documents retrieved from the database will be of type `Document<T>`, where `T` is the type of the collection. \
-This type is just wrapper type around the document, which adds the `_id` field to the document.
+Documents retrieved from the database will be of type `NeboaDocument<T>`, where `T` is the type of the collection. \
+This type is just wrapper type around the interface, which adds the `_id` field to the document.
 
-This is how the `Document<T>` type is defined:
+This is how the `NeboaDocument<T>` type is defined:
 
 ```ts
 interface User {
@@ -90,7 +90,7 @@ interface User {
   age: number
 }
 
-type Document<T> = T & {
+type NeboaDocument<T> = T & {
   _id: string
 }
 
@@ -102,8 +102,8 @@ type Document<T> = T & {
 }
 ```
 
-As you can see, an `_id` field is added to the document. This is an [ObjectID](https://www.mongodb.com/docs/manual/reference/bson-types/#std-label-objectid) string created by Nebra using the
-[BSON ObjectID](https://github.com/cabinjs/bson-objectid) library. You must not set the `_id` field yourself, as it will be overwritten by Nebra.
+As you can see, an `_id` field is added to the document. This is an [ObjectID](https://www.mongodb.com/docs/manual/reference/bson-types/#std-label-objectid) string created by Neboa using the
+[BSON ObjectID](https://github.com/cabinjs/bson-objectid) library. You must not set the `_id` field yourself, as it will be overwritten by Neboa.
 All the tables created in the database will use this ObjectID string as the primary key and you can use it to query documents.
 
 ## Updating documents
@@ -113,9 +113,9 @@ This method will accept an ObjectID as the first argument and the update as the 
 It will return the updated document.
 
 ```ts
-import { nebra } from 'nebra'
+import { neboa } from 'neboa'
 
-const db = nebra('database.db')
+const db = neboa('database.db')
 
 const Users = db.collection('users')
 
@@ -131,9 +131,9 @@ This method accepts an array of ObjectIDs as the first argument and an array of 
 It will return an array of the updated documents.
 
 ```ts
-import { nebra } from 'nebra'
+import { neboa } from 'neboa'
 
-const db = nebra('database.db')
+const db = neboa('database.db')
 
 const Users = db.collection('users')
 
@@ -158,9 +158,9 @@ The `delete` method accepts an ObjectID as the argument and will delete the docu
 The `deleteMany` method accepts an array of ObjectIDs as the argument and will delete all documents with those IDs.
 
 ```ts
-import { nebra } from 'nebra'
+import { neboa } from 'neboa'
 
-const db = nebra('database.db')
+const db = neboa('database.db')
 
 const Users = db.collection('users')
 

@@ -1,7 +1,7 @@
 
 # Zod example
 
-In the [basic example](/guide/examples/basic.md), we learned how to create a basic user system using Nebra and Express.
+In the [basic example](/guide/examples/basic.md), we learned how to create a basic user system using Neboa and Express.
 However, we didn't do any validation on the user data.
 
 In this example, we'll use [Zod](https://zod.dev/) to manage our types and validate our data. This will allow us to create a more robust CRUD system.
@@ -11,7 +11,7 @@ In this example, we'll use [Zod](https://zod.dev/) to manage our types and valid
 First, we'll install the required dependencies:
 
 ```sh
-npm install nebra
+npm install neboa
 npm install express
 npm install body-parser
 npm install zod
@@ -35,7 +35,7 @@ We'll start by creating a schema for our users:
 ```ts
 // src/database/schemas/user-schema.ts
 import { z } from 'zod';
-import { Document } from 'nebra';
+import { NeboaDocument } from 'neboa';
 
 export const UserSchema = z.object({
   username: z.string().min(3).max(20),
@@ -44,16 +44,16 @@ export const UserSchema = z.object({
 });
 
 export type User = z.infer<typeof UserSchema>;
-export type UserDocument = Document<User>;
+export type UserDocument = NeboaDocument<User>;
 ```
 
 Next, we'll create a database connection and add a users collection to it using our User type inferred from the zod schema:
 
 ```ts
 // src/database/database.ts
-import { nebra } from 'nebra';
+import { neboa } from 'neboa';
 
-export const db = nebra('path/to/database.sqlite');
+export const db = neboa('path/to/database.sqlite');
 export const Users = db.collection<User>('users');
 ```
 
@@ -118,4 +118,4 @@ app.put('/api/users/:id', async (req, res) => {
 });
 ```
 
-And that's how simple it is to integrate zod with Nebra!
+And that's how simple it is to integrate zod with Neboa!

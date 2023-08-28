@@ -4,11 +4,11 @@ import https from 'https';
 // https://vitepress.dev/reference/site-config
 export default async function () {
 
-  const nebraLatestRelease = await getRelease() as any;
+  const neboaLatestRelease = await getRelease() as any;
 
   return defineConfig({
-    base: '/nebra/', // for GitHub Pages
-    title: "Nebra",
+    base: '/neboa/', // for GitHub Pages
+    title: "Neboa",
     description: "Type-safe NoSQL with Node & SQLite.",
     appearance: 'dark',
     cleanUrls: true,
@@ -31,15 +31,15 @@ export default async function () {
         {
           text: 'Documentation',
           items: [
-            { text: 'Guide', link: '/guide/what-is-nebra' },
+            { text: 'Guide', link: '/guide/what-is-neboa' },
             { text: 'Getting started', link: '/guide/getting-started' },
           ]
         },
         {
-          text: nebraLatestRelease.tag_name,
+          text: neboaLatestRelease.tag_name,
           items: [
-            { text: 'Latest Release', link: nebraLatestRelease.html_url },
-            { text: 'Changelog', link: 'https://github.com/aerotoad/nebra/blob/main/CHANGELOG.md' },
+            { text: 'Latest Release', link: neboaLatestRelease.html_url },
+            { text: 'Changelog', link: 'https://github.com/aerotoad/neboa/blob/main/CHANGELOG.md' },
           ]
         }
       ],
@@ -49,7 +49,7 @@ export default async function () {
           text: 'Introduction',
           collapsed: false,
           items: [
-            { text: 'What is Nebra?', link: '/guide/what-is-nebra' },
+            { text: 'What is Neboa?', link: '/guide/what-is-neboa' },
             { text: 'Getting Started', link: '/guide/getting-started' },
           ]
         },
@@ -81,7 +81,7 @@ export default async function () {
       ],
 
       socialLinks: [
-        { icon: 'github', link: 'https://github.com/aerotoad/nebra' }
+        { icon: 'github', link: 'https://github.com/aerotoad/neboa' }
       ],
       footer: {
         message: `
@@ -98,9 +98,9 @@ function getRelease() {
   return new Promise((resolve) => {
     https.get({
       hostname: 'api.github.com',
-      path: '/repos/aerotoad/nebra/releases/latest',
+      path: '/repos/aerotoad/neboa/releases/latest',
       headers: {
-        'User-Agent': 'nebra-docs'
+        'User-Agent': 'neboa-docs'
       }
     }, (res) => {
       res.setEncoding('utf8');

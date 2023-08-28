@@ -1,7 +1,7 @@
 
 # Query Constraints
 
-When building queries, Nebra provides you with many different constraints to filter documents.\
+When building queries, Neboa provides you with many different constraints to filter documents.\
 These constraints are chainable and can be used to build complex queries.
 
 Here we will go over all the constraints available to you and how to use them.
@@ -136,7 +136,7 @@ const query = Users.query()
 
 ## `like`
 
-SQLite does not have a built-in full-text search feature, but Nebra can use LIKE operator to provide a basic search capability.
+SQLite does not have a built-in full-text search feature, but Neboa can use LIKE operator to provide a basic search capability.
 
 ```ts
 const query = Users.query()

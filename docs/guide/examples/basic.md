@@ -1,7 +1,7 @@
 
 # Basic Example
 
-This example shows how to create a basic user system using Nebra and Express.
+This example shows how to create a basic user system using Neboa and Express.
 
 ::: info Note 
   This example assumes you have a basic Node.js project setup with Typescript.\
@@ -13,7 +13,7 @@ This example shows how to create a basic user system using Nebra and Express.
 First, install the required dependencies:
 
 ```sh
-npm install nebra
+npm install neboa
 npm install express
 npm install body-parser
 ```
@@ -35,7 +35,7 @@ We'll start by creating an interface for our users:
 
 ```ts
 // src/interfaces/user.ts
-import { Document } from 'nebra';
+import { NeboaDocument } from 'neboa';
 
 export interface User {
   username: string;
@@ -43,16 +43,16 @@ export interface User {
   password: string;
 }
 
-export type UserDocument = Document<User>;
+export type UserDocument = NeboaDocument<User>;
 ```
 
 Next, we'll create a database connection and add a users collection to it, passing in our user interface:
 
 ```ts
 // src/database/database.ts
-import { nebra } from 'nebra';
+import { neboa } from 'neboa';
 
-export const db = nebra('path/to/database.sqlite');
+export const db = neboa('path/to/database.sqlite');
 export const Users = db.collection<User>('users');
 ```
 
@@ -144,10 +144,10 @@ app.put('/api/users/:id', async (req, res) => {
 });
 ```
 
-And just like that, we have a basic CRUD API for our users using Nebra and Express.
-As you can see, Nebra is very simple to use and allows you to create a type-safe database with minimal effort.
+And just like that, we have a basic CRUD API for our users using Neboa and Express.
+As you can see, Neboa is very simple to use and allows you to create a type-safe database with minimal effort.
 
 ## Conclusion
 
-In this example, we learned how to create a basic user system using Nebra and Express.\
-There are many things we left out of this example, like runtime payload validation and better error handling, but this should give you a good idea of how to use Nebra in your projects.
+In this example, we learned how to create a basic user system using Neboa and Express.\
+There are many things we left out of this example, like runtime payload validation and better error handling, but this should give you a good idea of how to use Neboa in your projects.
