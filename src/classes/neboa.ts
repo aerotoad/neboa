@@ -3,12 +3,12 @@ import { Collection } from './collection';
 import Database, { Database as DatabaseConstructor } from 'better-sqlite3';
 import { DatabaseOptions } from '../types/database-options';
 
-export class Nebra {
+export class Neboa {
 
   private _database: DatabaseConstructor;
 
   /**
-   * Create a new Nebra instance
+   * Create a new Neboa instance
    * @param path Path to the database file (e.g. `:memory:` or `./database.db`)
    * If :memory: is used, the database will be stored in memory and will not be persistent
    * This path is passed directly to the better-sqlite3 constructor
@@ -72,7 +72,7 @@ export class Nebra {
 
   /**
    * Close the database connection
-   * Once closed, the database cannot be accessed anymore until a new Nebra instance is created
+   * Once closed, the database cannot be accessed anymore until a new Neboa instance is created
    * @returns {boolean}
    * @throws {Error} If closing the connection fails
    */
