@@ -15,7 +15,7 @@
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" style="max-width: 100%;">
   </a>
 
-&nbsp;
+&nbsp; 
 
   <p align="center" dir="auto">
     <b>:sparkles: Type-Safe</b> |
