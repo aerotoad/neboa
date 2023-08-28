@@ -1,5 +1,5 @@
 {
-  "name": "nebra",
+  "name": "neboa",
   "type": "module",
   "version": "0.4.1",
   "description": "Type-safe NoSQL with Node & SQLite.",
@@ -29,12 +29,12 @@
     "docs:preview": "vitepress preview docs"
   },
   "bugs": {
-    "url": "https://github.com/aerotoad/nebra/issues"
+    "url": "https://github.com/aerotoad/neboa/issues"
   },
-  "homepage": "https://github.com/aerotoad/nebra#readme",
+  "homepage": "https://github.com/aerotoad/neboa#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aerotoad/nebra.git"
+    "url": "git+https://github.com/aerotoad/neboa.git"
   },
   "keywords": [
     "sqlite",
