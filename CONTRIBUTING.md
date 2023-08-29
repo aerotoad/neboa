@@ -1,5 +1,5 @@
-# Contributing to Nebra :fog:
-Thanks for your interest in contributing to Nebra! :tada:
+# Contributing to Neboa :fog:
+Thanks for your interest in contributing to Neboa! :tada:
 
 We want to make contributing to this project as easy and transparent as possible, whether it's:
 
@@ -17,7 +17,7 @@ Pull requests are the best way to propose changes to the codebase (we use [Githu
 
 1. Fork the repo and create your branch from `master`.
 2. If you've added code that should be tested, add tests.
-3. If you've changed APIs, update [the documentation](https://github.com/aerotoad/nebra).
+3. If you've changed APIs, update [the documentation](https://github.com/aerotoad/neboa).
 4. Ensure the test suite passes.
 5. Make sure your code lints.
 6. Issue that pull request!
@@ -25,8 +25,8 @@ Pull requests are the best way to propose changes to the codebase (we use [Githu
 ## Any contributions you make will be under the MIT Software License
 In short, when you submit code changes, your submissions are understood to be under the same [AGPLv3 License](https://choosealicense.com/licenses/agpl-3.0/) that covers the project. Feel free to contact the maintainers if that's a concern.
 
-## Report bugs using Github's [issues](https://github.com/aerotoad/nebra/issues)
-We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/aerotoad/nebra/issues/new/choose); it's that easy!
+## Report bugs using Github's [issues](https://github.com/aerotoad/neboa/issues)
+We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/aerotoad/neboa/issues/new/choose); it's that easy!
 
 ## Write bug reports with detail, background, and sample code
 [This is an example](http://stackoverflow.com/q/12488905/180626) of a bug report by [Brian A. Danielak
