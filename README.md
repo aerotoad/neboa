@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/aerotoad/neboa/blob/main/docs/public/social-image.png?raw=true" style="height:500px;">
+  <img src="https://github.com/aerotoad/neboa/blob/main/docs/public/social-image.png?raw=true" style="max-height:500px;">
   <p></p>
   
   <!--<h1>Neboa :fog:</h1>
