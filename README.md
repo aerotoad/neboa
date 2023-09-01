@@ -8,11 +8,14 @@
     <img src="https://github.com/aerotoad/neboa/actions/workflows/ci.yml/badge.svg">
   </a>
   <a href="https://github.com/aerotoad/neboa/blob/main/LICENSE">
-    <img alt="License" src="https://img.shields.io/github/license/aerotoad/neboa">
+    <img alt="GitHub" src="https://img.shields.io/github/license/aerotoad/neboa?logo=opensourceinitiative&logoColor=ffffff">
   </a>
   <img src="https://img.shields.io/badge/Project%20Status-Alpha-yellow?logo=git&amp;logoColor=white" style="max-width: 100%;">
   <a href="https://github.com/aerotoad/neboa/blob/main/CONTRIBUTING.md">
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" style="max-width: 100%;">
+  </a>
+  <a href="https://github.com/aerotoad/neboa/stargazers">
+    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/aerotoad/neboa?logo=github">
   </a>
 
 &nbsp; 
