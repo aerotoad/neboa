@@ -1,6 +1,9 @@
 <div align="center">
-  <h1>Neboa :fog:</h1>
-  <h4><i>Seamless Data Management with Neboa: Type-Safe NoSQL for Node & SQLite.</i></h4>
+  <img src="https://github.com/aerotoad/neboa/blob/main/docs/public/social-image.png?raw=true" style="height:500px;">
+  <p></p>
+  
+  <!--<h1>Neboa :fog:</h1>
+  <h4><i>Seamless Data Management with Neboa: Type-Safe NoSQL for Node & SQLite.</i></h4>-->
   <a href="https://www.npmjs.com/neboa" rel="nofollow">
     <img alt="Neboa on npm" src="https://img.shields.io/npm/v/neboa.svg?logo=npm&amp;logoColor=fff&amp;label=NPM+package&amp;color=f59e0b" style="max-width: 100%;">
   </a>
