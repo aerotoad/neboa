@@ -58,7 +58,7 @@ export default async function () {
           collapsed: false,
           items: [
             { text: 'Connecting to a database', link: '/guide/basic/connecting-a-database' },
-            { text: 'Working with collections', link: '/guide/basic/working-with-collections' },
+            { text: 'Working with collections', link: '/guide/basic/collections' },
           ]
         },
         {
@@ -68,6 +68,13 @@ export default async function () {
             { text: 'Creating queries', link: '/guide/queries/creating-queries' },
             { text: 'Query constraints', link: '/guide/queries/query-constraints' },
             { text: 'Relational data', link: '/guide/queries/relational-data' },
+          ]
+        },
+        {
+          text: 'Advanced',
+          collapsed: false,
+          items: [
+            { text: 'Subscriptions', link: '/guide/advanced/subscriptions' },
           ]
         },
         {

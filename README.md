@@ -87,7 +87,7 @@ Below you can find table of contents with useful links to the documentation.
 
 #### Basic Usage
 - [Connecting to a Database](https://aerotoad.github.io/neboa/guide/basic/connecting-a-database)
-- [Working with collections](https://aerotoad.github.io/neboa/guide/basic/working-with-collections)
+- [Working with collections](https://aerotoad.github.io/neboa/guide/basic/collections)
 
 #### Queries
 - [Creating Queries](https://aerotoad.github.io/neboa/guide/queries/creating-queries)
