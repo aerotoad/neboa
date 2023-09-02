@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.6.0](https://github.com/aerotoad/neboa/compare/v0.5.0...v0.6.0) (2023-09-02)
+
+
+### Features
+
+* Add support for subscriptions ([3260f34](https://github.com/aerotoad/neboa/commit/3260f34d920fd59931baf6257ea499f61399b06b)), closes [#4](https://github.com/aerotoad/neboa/issues/4) [#5](https://github.com/aerotoad/neboa/issues/5)
+
 ## [0.5.0](https://github.com/aerotoad/neboa/compare/v0.4.1...v0.5.0) (2023-08-28)
 
 
