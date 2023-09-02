@@ -94,6 +94,9 @@ Below you can find table of contents with useful links to the documentation.
 - [Query constraints](https://aerotoad.github.io/neboa/guide/queries/query-constraints)
 - [Relational Data](https://aerotoad.github.io/neboa/guide/queries/relational-data)
 
+#### Advanced
+- [Subscriptions](https://aerotoad.github.io/neboa/guide/advanced/subscriptions)
+
 ## Contributing
 
 Thanks for your interest in contributing! Please, read on the guidelines for [contributing](CONTRIBUTING.md) and then check the [issues](https://github.com/aerotoad/neboa/issues) to see if there's anything you can help with.
