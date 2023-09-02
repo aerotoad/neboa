@@ -2,8 +2,12 @@ import ObjectID from 'bson-objectid';
 import { Query } from './query';
 import { NeboaDocument } from '../types/neboa-document';
 import { Database } from 'better-sqlite3';
+import { Emitter } from './emitter';
+import { Subscription } from './subscription';
 
 export class Collection<T = {}> {
+
+  public _emitter: Emitter<Array<NeboaDocument<T>>> = new Emitter();
 
   constructor(
     private _database: Database,
@@ -15,7 +19,7 @@ export class Collection<T = {}> {
    * @returns A new query instance
    */
   query() {
-    return new Query<T>(this._database, this._name);
+    return new Query<T>(this._database, this._name, this);
   }
 
   /**
@@ -30,6 +34,7 @@ export class Collection<T = {}> {
         INSERT INTO ${this._name} (id, data)
         VALUES ('${newDocument._id}', '${JSON.stringify(newDocument)}');
       `).run();
+      this._emitter.emit('create', [newDocument]);
       return newDocument;
     } catch (error) {
       throw error;
@@ -54,7 +59,7 @@ export class Collection<T = {}> {
         INSERT INTO ${this._name} (id, data)
         VALUES ${insertionData.map(data => `('${data.id}', '${data.data}')`).join(', ')};
       `).run();
-
+      this._emitter.emit('create', [...newDocuments]);
       return newDocuments;
     } catch (error) {
       throw error;
@@ -82,7 +87,9 @@ export class Collection<T = {}> {
         RETURNING *;
       `).get() as any;
 
-      return JSON.parse(result.data);
+      const updatedDocumentParsed = JSON.parse(result.data);
+      this._emitter.emit('update', [updatedDocumentParsed]);
+      return updatedDocumentParsed;
     } catch (error) {
       throw error;
     }
@@ -123,6 +130,7 @@ export class Collection<T = {}> {
       // Run the transaction
       transaction();
 
+      this._emitter.emit('update', updatedDocuments);
       return updatedDocuments;
 
     } catch (error) {
@@ -141,6 +149,8 @@ export class Collection<T = {}> {
         DELETE FROM ${this._name}
         WHERE id = '${objectId}';
       `).run();
+
+      this._emitter.emit('delete', [{ _id: objectId } as NeboaDocument<T>]);
       return true;
     } catch (error) {
       throw error;
@@ -158,6 +168,8 @@ export class Collection<T = {}> {
         DELETE FROM ${this._name}
         WHERE id IN (${objectIds.map(id => `'${id}'`).join(', ')});
       `).run();
+
+      this._emitter.emit('delete', objectIds.map(id => ({ _id: id } as NeboaDocument<T>)));
       return true;
     } catch (error) {
       throw error;
@@ -207,6 +219,10 @@ export class Collection<T = {}> {
       ...document,
       _id: ObjectID().toHexString(),
     } as NeboaDocument<T>;
+  }
+
+  subscribe(event: 'create' | 'update' | 'delete', callback: (documents: NeboaDocument<T>[] | string[]) => void) {
+    return new Subscription<T>(event, 'collection', null, this, callback);
   }
 
 }

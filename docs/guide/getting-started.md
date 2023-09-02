@@ -51,7 +51,7 @@ This guide will assume you're using ESM, but if you're using CommonJS, you can s
 
 To use Neboa as a CommonJS module, you need to replace imports like so:
   
-```js
+```ts
 // ESM
 import { neboa } from 'neboa'
 
