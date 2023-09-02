@@ -3,8 +3,10 @@ import { formatValue } from "../functions/format-value";
 import { Database } from "better-sqlite3";
 import { QueryBuilder } from "./query-builder";
 import { NeboaDocument } from '../types/neboa-document';
+import { Collection } from "./collection";
+import { Subscription } from "./subscription";
 
-export class Query<T = any> {
+export class Query<T = NeboaDocument<{}>> {
 
   public _queryBuilder: QueryBuilder;
 
@@ -12,9 +14,10 @@ export class Query<T = any> {
 
   constructor(
     private _database: Database,
-    private _collection: string
+    private _collectionName: string,
+    private _collection: Collection<T>
   ) {
-    this._queryBuilder = new QueryBuilder(this._database, this._collection);
+    this._queryBuilder = new QueryBuilder(this._database, this._collectionName);
   }
 
   /**
@@ -193,7 +196,7 @@ export class Query<T = any> {
         for (let lookup of this.lookups) {
           const { from, localField, foreignField, as, limit, skip, sort } = lookup;
           //const lookupCollection = new Collection(this._knex, from);
-          const lookupQuery = new Query(this._database, from);
+          const lookupQuery = new Query(this._database, from, this._collection);
           if (Array.isArray(parsedDocument[localField])) {
             lookupQuery.containedIn(foreignField, parsedDocument[localField]);
             if (limit) lookupQuery.limit(limit);
@@ -227,6 +230,17 @@ export class Query<T = any> {
     } catch (error) {
       throw error;
     }
+  }
+
+  clone() {
+    const clone = new Query(this._database, this._collectionName, this._collection);
+    clone._queryBuilder = this._queryBuilder.clone();
+    clone.lookups = this.lookups;
+    return clone;
+  }
+
+  subscribe(event: 'create' | 'update' | 'delete', callback: (documents: NeboaDocument<T>[] | string[]) => void) {
+    return new Subscription<T>(event, 'query', this, this._collection, callback);
   }
 
 }

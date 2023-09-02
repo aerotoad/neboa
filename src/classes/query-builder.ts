@@ -59,4 +59,13 @@ export class QueryBuilder {
     return this._openingStatement + this._query;
   }
 
+  clone() {
+    const clone = new QueryBuilder(this._database, this._collection);
+    clone._openingStatement = this._openingStatement;
+    clone._query = this._query;
+    clone._limitValue = this._limitValue;
+    clone._skipValue = this._skipValue;
+    return clone;
+  }
+
 }
