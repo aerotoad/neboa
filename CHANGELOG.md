@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.6.1](https://github.com/aerotoad/neboa/compare/v0.6.0...v0.6.1) (2023-09-22)
+
+
+### Bug Fixes
+
+* Use bound parameters to correctly handle escaped characters ([8a06876](https://github.com/aerotoad/neboa/commit/8a06876f1d48e0c9fb8d76efafd8e60cd2648b70))
+
 ## [0.6.0](https://github.com/aerotoad/neboa/compare/v0.5.0...v0.6.0) (2023-09-02)
 
 
