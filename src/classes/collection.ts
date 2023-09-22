@@ -32,8 +32,11 @@ export class Collection<T = {}> {
       const newDocument = this.newDocument(document);
       this._database.prepare(`
         INSERT INTO ${this._name} (id, data)
-        VALUES ('${newDocument._id}', '${JSON.stringify(newDocument)}');
-      `).run();
+        VALUES (?, ?);
+      `)
+        .bind(newDocument._id, JSON.stringify(newDocument))
+        .run();
+
       this._emitter.emit('create', [newDocument]);
       return newDocument;
     } catch (error) {
@@ -55,10 +58,19 @@ export class Collection<T = {}> {
         data: JSON.stringify(document)
       }));
 
-      this._database.prepare(`
-        INSERT INTO ${this._name} (id, data)
-        VALUES ${insertionData.map(data => `('${data.id}', '${data.data}')`).join(', ')};
-      `).run();
+      // Initiate a transaction
+      const transaction = this._database.transaction(() => {
+        const stmt = this._database.prepare(`
+          INSERT INTO ${this._name} (id, data)
+          VALUES (?, ?);
+        `);
+        for (const data of insertionData) {
+          stmt.run(data.id, data.data);
+        }
+      });
+
+      // Run the transaction
+      transaction();
       this._emitter.emit('create', [...newDocuments]);
       return newDocuments;
     } catch (error) {
@@ -80,12 +92,14 @@ export class Collection<T = {}> {
     }
 
     try {
+
       const result = this._database.prepare(`
         UPDATE ${this._name}
-        SET data = '${JSON.stringify(updatedDocument)}'
-        WHERE id = '${objectId}'
+        SET data = ?
+        WHERE id = ?
         RETURNING *;
-      `).get() as any;
+      `)
+        .get(JSON.stringify(updatedDocument), objectId) as any;
 
       const updatedDocumentParsed = JSON.parse(result.data);
       this._emitter.emit('update', [updatedDocumentParsed]);
