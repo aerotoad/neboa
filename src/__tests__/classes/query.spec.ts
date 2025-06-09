@@ -264,7 +264,7 @@ async function generateUsersWithCar(number: number, usernames: string[], Users: 
 
 function generateUser() {
   return {
-    username: faker.internet.userName(),
+    username: faker.internet.username(),
     email: faker.internet.email(),
     password: faker.internet.password(),
     age: faker.number.int({ min: 18, max: 65 }),
