@@ -1,7 +1,7 @@
 {
   "name": "neboa",
   "type": "module",
-  "version": "0.6.1",
+  "version": "0.6.3",
   "description": "Type-safe NoSQL with Node & SQLite.",
   "author": "Samuel Bazaga",
   "license": "AGPL-3.0-or-later",
